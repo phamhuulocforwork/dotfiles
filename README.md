@@ -58,13 +58,13 @@ git clone https://github.com/phamhuulocforwork/dotfiles.git
 # Navigate to dotfiles directory
 cd dotfiles
 
-# Run setup script
-chmod +x setup-zsh.sh
-./setup-zsh.sh
-
 # Apply configuration
 chmod +x config.sh
 ./config.sh
+
+# Run setup script
+chmod +x setup-zsh.sh
+./setup-zsh.sh
 ```
 
 ### 🎨 Step 6: Finalize Installation
