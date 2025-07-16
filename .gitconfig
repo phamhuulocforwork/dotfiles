@@ -3,7 +3,7 @@
 	email = phamhuulocforwork@gmail.com
 [init]
   defaultBranch = main
-[color]ư
+[color]
   ui = auto
   diff = auto
   status = auto
