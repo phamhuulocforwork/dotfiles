@@ -6,11 +6,11 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # Install zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-# Create .zsh directory for themes
-mkdir -p ~/.zsh
-
 # Download Catppuccin theme for zsh-syntax-highlighting
-curl -o ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh https://raw.githubusercontent.com/catppuccin/zsh-syntax-highlighting/main/themes/catppuccin_mocha-zsh-syntax-highlighting.zsh
+git clone https://github.com/JannoTjarks/catppuccin-zsh.git
+mkdir ~/.oh-my-zsh/themes/catppuccin-flavors
+ln catppuccin-zsh/catppuccin.zsh-theme ~/.oh-my-zsh/themes/
+ln catppuccin-zsh/catppuccin-flavors/* ~/.oh-my-zsh/themes/catppuccin-flavors
 
 # Copy .zshrc to home directory
 cp .zshrc ~/.zshrc
