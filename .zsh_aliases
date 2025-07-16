@@ -1,5 +1,5 @@
 # Windows Development Aliases
-alias github="cd /mnt/c/Users/PC/Github"
+alias github="cd /mnt/d/Github"
 
 # Quick Navigation
 alias home="cd ~"
@@ -60,4 +60,4 @@ alias di="docker images"
 # VS Code Shortcuts
 alias code.="code ."
 alias codeh="code ~"
-alias codeproj="code /mnt/c/Users/PC/Github" 
+alias codeproj="code /mnt/d/Github" 
