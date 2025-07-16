@@ -63,6 +63,7 @@ chmod +x setup-zsh.sh
 ./setup-zsh.sh
 
 # Apply configuration
+chmod +x config.sh
 ./config.sh
 ```
 
