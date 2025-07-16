@@ -4,7 +4,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Theme
 ZSH_THEME="catppuccin"
 CATPPUCCIN_FLAVOR="mocha"
-CATPPUCCIN_SHOW_TIME=true
+CATPPUCCIN_SHOW_TIME=false
 
 # Plugins
 plugins=(
@@ -21,6 +21,9 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+
+# Catppuccin theme for zsh-syntax-highlighting
+source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 
 # Windows Development Aliases
 alias github="cd /mnt/c/Users/PC/Github"
@@ -80,4 +83,3 @@ if [ -f ~/.zsh_aliases ]; then
 fi
 
 export EDITOR="code"
-export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"

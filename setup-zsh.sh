@@ -1,25 +1,28 @@
 #!/bin/bash
 
-echo "🚀 Setting up Oh My Zsh with plugins and theme..."
-
-# Install Powerlevel10k theme
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+# Install Catppuccin zsh theme
+git clone https://github.com/JannoTjarks/catppuccin-zsh.git /tmp/catppuccin-zsh
+mkdir -p ~/.oh-my-zsh/themes/catppuccin-flavors
+ln -sf /tmp/catppuccin-zsh/catppuccin.zsh-theme ~/.oh-my-zsh/themes/
+ln -sf /tmp/catppuccin-zsh/catppuccin-flavors/* ~/.oh-my-zsh/themes/catppuccin-flavors/
 
 # Install zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# Install zsh-syntax-highlighting
+# Install Catppuccin zsh-syntax-highlighting theme
+git clone https://github.com/catppuccin/zsh-syntax-highlighting.git /tmp/catppuccin-zsh-syntax-highlighting
+mkdir -p ~/.zsh
+cp -v /tmp/catppuccin-zsh-syntax-highlighting/themes/catppuccin_mocha-zsh-syntax-highlighting.zsh ~/.zsh/
+
+# Install zsh-syntax-highlighting plugin
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # Copy .zshrc to home directory
 cp .zshrc ~/.zshrc
 
-echo "✅ Oh My Zsh setup completed!"
-echo "📝 Please restart your terminal or run 'source ~/.zshrc'"
-echo "🎨 Run 'p10k configure' to configure Powerlevel10k theme"
+# Clean up temporary directories
+rm -rf /tmp/catppuccin-zsh
+rm -rf /tmp/catppuccin-zsh-syntax-highlighting
 
 # Make zsh default shell
-echo "🔄 Making zsh the default shell..."
-chsh -s $(which zsh)
-
-echo "🎉 Setup complete! Please restart your terminal." 
+chsh -s $(which zsh) 

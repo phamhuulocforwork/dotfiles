@@ -1,105 +1,120 @@
-## 🚀 Các bước cài đặt WSL, Zsh và Oh My Zsh
+# Dotfiles Configuration with WSL, Zsh & Oh My Zsh
 
-### Bước 1: Cài đặt WSL (Windows Subsystem for Linux)
+## Complete Installation and Configuration Guide
 
-#### 1.1 Kích hoạt WSL feature
+### 📋 System Requirements
 
-Mở **PowerShell** với quyền Administrator và chạy:
+- Windows 10 version 2004 and higher or Windows 11
+- PowerShell with Administrator privileges
 
-```powershell
-# Kích hoạt WSL feature
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-
-# Kích hoạt Virtual Machine Platform
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-```
-
-#### 1.2 Cài đặt WSL 2
+### 🚀 Step 1: Install WSL (Windows Subsystem for Linux)
 
 ```powershell
-# Cài đặt WSL và Ubuntu (distribution mặc định)
+# Enable WSL feature
 wsl --install
 
-# Hoặc cài đặt distribution cụ thể
+# Or install Ubuntu specifically
 wsl --install -d Ubuntu
 ```
 
-#### 1.3 Thiết lập WSL 2 làm phiên bản mặc định
+**Restart your computer** after installation completes.
 
-```powershell
-wsl --set-default-version 2
-```
+### 🐧 Step 2: Setup WSL Ubuntu
 
-#### 1.4 Khởi động lại máy tính
-
-Sau khi cài đặt xong, **khởi động lại máy tính**.
-
-### Bước 2: Thiết lập Ubuntu trong WSL
-
-#### 2.1 Mở Ubuntu
-
-- Tìm "Ubuntu" trong Start Menu và mở
-- Hoặc mở Terminal/PowerShell và chạy: `wsl`
-
-#### 2.2 Tạo user và password
-
-Khi lần đầu mở Ubuntu, bạn sẽ được yêu cầu:
-
-- Tạo username
-- Tạo password
-
-#### 2.3 Cập nhật hệ thống
+Open WSL Ubuntu and create user account when prompted.
 
 ```bash
-# Cập nhật package list
-sudo apt update
+# Update system
+sudo apt update && sudo apt upgrade -y
 
-# Nâng cấp các package
-sudo apt upgrade -y
+# Install essential packages
+sudo apt install -y curl git wget
 ```
 
-### Bước 3: Cài đặt Zsh
-
-#### 3.1 Cài đặt Zsh
+### 🐚 Step 3: Install Zsh
 
 ```bash
-# Cài đặt zsh
-sudo apt install zsh -y
+# Install Zsh
+sudo apt install -y zsh
 
-# Kiểm tra version
+# Verify installation
 zsh --version
 ```
 
-#### 3.2 Cài đặt Oh My Zsh
+### ⚡ Step 4: Install Oh My Zsh
 
 ```bash
-# Cài đặt Oh My Zsh
+# Install Oh My Zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-### Bước 4: Sử dụng dotfiles
-
-#### 4.1 Clone dotfiles
+### 📁 Step 5: Clone and Apply Dotfiles
 
 ```bash
-# Di chuyển về home directory
-cd ~
-
 # Clone dotfiles repository
+cd ~
 git clone https://github.com/phamhuulocforwork/dotfiles.git
 
-# Di chuyển vào thư mục dotfiles
+# Navigate to dotfiles directory
 cd dotfiles
-```
 
-#### 4.2 Chạy script cài đặt
-
-```bash
-# Chạy script cấu hình
-chmod +x config.sh
-./config.sh
-
-# Chạy script setup zsh (script này sẽ cài đặt theme và plugins)
+# Run setup script
 chmod +x setup-zsh.sh
 ./setup-zsh.sh
+
+# Apply configuration
+./config.sh
 ```
+
+### 🎨 Step 6: Finalize Installation
+
+```bash
+# Restart terminal or
+source ~/.zshrc
+
+# Verify theme is applied
+echo $ZSH_THEME
+```
+
+### 🛠️ Installed Features
+
+- **Theme**: Catppuccin Mocha with beautiful colors
+- **Plugins**:
+  - `zsh-autosuggestions` - Automatic command suggestions
+  - `zsh-syntax-highlighting` - Syntax highlighting with Catppuccin theme
+  - `git`, `docker`, `npm`, `node`, `yarn`, `vscode`, `github`
+- **Aliases**: Useful shortcuts for development
+- **Functions**: `mkcd`, `gitinit`, `clone` functions
+
+### 📝 Reload Dotfiles
+
+```bash
+# Reload configuration after editing
+./reload-dotfiles.sh
+
+# Or use alias
+reload
+```
+
+---
+
+## 📂 Repository Structure
+
+```txt
+dotfiles/
+├── .zshrc                    # Main Zsh configuration
+├── .zsh_aliases             # Custom aliases
+├── .gitconfig               # Git configuration
+├── setup-zsh.sh             # Zsh setup script
+├── config.sh                # Dotfiles deployment script
+├── reload-dotfiles.sh       # Reload configuration script
+└── README.md                # This file
+```
+
+## 🤝 Contributing
+
+Feel free to fork this repository and customize the dotfiles according to your needs!
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
