@@ -3,3 +3,13 @@
 	email = phamhuulocforwork@gmail.com
 [init]
   defaultBranch = main
+[color]ư
+  ui = auto
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+[alias]
+    ls = !eza --git --group-directories-first --icons
+    ll = !eza --git --group-directories-first --icons -l
+    la = !eza --git --group-directories-first --icons -la
