@@ -7,5 +7,6 @@ do
     cp ~/dotfiles/$(echo $dotfile) ~/$(echo $dotfile)
 done
 
-# Set execute permissions for setup script
+# Set execute permissions for scripts
 chmod +x ~/dotfiles/setup-zsh.sh
+chmod +x ~/dotfiles/reload-dotfiles.sh

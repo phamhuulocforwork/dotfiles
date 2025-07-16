@@ -2,9 +2,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # Theme
-ZSH_THEME="catppuccin"
-CATPPUCCIN_FLAVOR="mocha"
-CATPPUCCIN_SHOW_TIME=false
+ZSH_THEME=""
 
 # Plugins
 plugins=(
@@ -20,8 +18,11 @@ plugins=(
     github
 )
 
-# Catppuccin theme for zsh-syntax-highlighting
+# Source Catppuccin theme for zsh-syntax-highlighting BEFORE Oh My Zsh is sourced
 source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+
+# Source Oh My Zsh
+source $ZSH/oh-my-zsh.sh
 
 # Windows Development Aliases
 alias github="cd /mnt/d/Github"
