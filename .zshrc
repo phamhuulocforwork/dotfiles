@@ -1,16 +1,83 @@
+# Oh My Zsh Configuration
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME=""
+# Theme
+ZSH_THEME="catppuccin"
+CATPPUCCIN_FLAVOR="mocha"
+CATPPUCCIN_SHOW_TIME=true
 
-autoload -U promptinit; promptinit
-prompt pure
-
-CASE_SENSITIVE="true"
-# ENABLE_CORRECTION="true"
-
-plugins=(git docker)
+# Plugins
+plugins=(
+    git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    docker
+    docker-compose
+    npm
+    node
+    yarn
+    vscode
+    github
+)
 
 source $ZSH/oh-my-zsh.sh
 
-export EDITOR='code -w'
-export TERM=xterm-256color
+# Windows Development Aliases
+alias github="cd /mnt/c/Users/PC/Github"
+alias code="code ."
+alias ll="ls -la"
+alias la="ls -la"
+alias ..="cd .."
+alias ...="cd ../.."
+
+# Git Aliases
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gl="git pull"
+alias gco="git checkout"
+alias gb="git branch"
+
+# Node.js Development
+alias ni="npm install"
+alias ns="npm start"
+alias nt="npm test"
+alias nb="npm run build"
+
+# Windows Path Integration
+export PATH="/mnt/c/Program Files/Microsoft VS Code/bin:$PATH"
+export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
+
+# Auto cd to projects directory on startup
+if [[ "$PWD" == "$HOME" ]]; then
+    cd /mnt/c/Users/PC/Github
+fi
+
+# Custom Functions
+function mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+function gitinit() {
+    git init
+    git add .
+    git commit -m "Initial commit"
+}
+
+function clone() {
+    git clone "$1"
+    if [ "$2" ]; then
+        cd "$2"
+    else
+        cd "$(basename "$1" .git)"
+    fi
+}
+
+# Load custom aliases
+if [ -f ~/.zsh_aliases ]; then
+    source ~/.zsh_aliases
+fi
+
+export EDITOR="code"
+export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
