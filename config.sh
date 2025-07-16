@@ -1,6 +1,6 @@
 #! /bin/bash
 
-DOTFILES=(.gitconfig .zshrc .zsh_aliases)
+DOTFILES=".gitconfig .zshrc .zsh_aliases"
 
 for dotfile in $(echo ${DOTFILES[*]});
 do
