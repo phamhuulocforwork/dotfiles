@@ -1,5 +1,5 @@
 # Windows Development Aliases
-alias github="cd /mnt/c/Users/PC/Github"
+alias github="cd /mnt/d/Github"
 
 # Quick Navigation
 alias home="cd ~"
