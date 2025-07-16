@@ -2,7 +2,9 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # Theme
-ZSH_THEME=""
+ZSH_THEME="catppuccin"
+CATPPUCCIN_FLAVOR="mocha"
+CATPPUCCIN_SHOW_TIME=false
 
 # Plugins
 plugins=(
