@@ -1,5 +1,7 @@
 # Dotfiles Configuration with WSL, Zsh & Oh My Zsh
 
+![Thumbnail](./thumbnail.png)
+
 ## Complete Installation and Configuration Guide
 
 ### 📋 System Requirements
