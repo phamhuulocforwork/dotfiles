@@ -27,7 +27,7 @@ source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 source $ZSH/oh-my-zsh.sh
 
 # Windows Development Aliases
-alias github="cd /mnt/d/Github"
+alias github="cd /mnt/c/Users/PC/Github"
 alias code="code ."
 alias ll="ls -la"
 alias la="ls -la"
@@ -55,7 +55,7 @@ export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
 
 # Auto cd to projects directory on startup
 if [[ "$PWD" == "$HOME" ]]; then
-    cd /mnt/d/Github
+    cd /mnt/c/Users/PC/Github
 fi
 
 # Custom Functions
