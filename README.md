@@ -1,6 +1,6 @@
 # Dotfiles Configuration with WSL, Zsh & Oh My Zsh
 
-![Thumbnail](./thumbail.png)
+![Thumbnail](./thumbnail.png)
 
 ## Complete Installation and Configuration Guide
 
