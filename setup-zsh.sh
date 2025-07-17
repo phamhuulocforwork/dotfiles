@@ -12,6 +12,14 @@ mkdir ~/.oh-my-zsh/themes/catppuccin-flavors
 ln catppuccin-zsh/catppuccin.zsh-theme ~/.oh-my-zsh/themes/
 ln catppuccin-zsh/catppuccin-flavors/* ~/.oh-my-zsh/themes/catppuccin-flavors
 
+# Copy ssh keys to home directory
+mkdir -p ~/.ssh
+cp /mnt/c/Users/PC/.ssh/id_ed25519 ~/.ssh/
+cp /mnt/c/Users/PC/.ssh/id_ed25519.pub ~/.ssh/
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+chmod 700 ~/.ssh
+
 # Copy .zshrc to home directory
 cp .zshrc ~/.zshrc
 

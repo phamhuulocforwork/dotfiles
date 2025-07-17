@@ -55,7 +55,7 @@ export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
 
 # Auto cd to projects directory on startup
 if [[ "$PWD" == "$HOME" ]]; then
-    cd /mnt/c/Users/PC/Github
+    cd /mnt/d/Github
 fi
 
 # Custom Functions
