@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Create github directory if it doesn't exist
+if [ ! -d ~/github ]; then
+mkdir ~/github
+fi
+
 # Install zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
