@@ -1,6 +1,9 @@
 # Windows Development Aliases
 alias github="cd ~/Github"
 
+# Github alias
+alias python="python3"
+
 # Quick Navigation
 alias home="cd ~"
 alias ..="cd .."
