@@ -84,3 +84,8 @@ if [ -f ~/.zsh_aliases ]; then
 fi
 
 export EDITOR="code"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
