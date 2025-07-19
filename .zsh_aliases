@@ -1,5 +1,5 @@
 # Windows Development Aliases
-alias github="cd ~/github"
+alias github="cd ~/Github"
 
 # Quick Navigation
 alias home="cd ~"
@@ -50,7 +50,7 @@ alias editrc="code ~/.zshrc"
 alias editalias="code ~/.zsh_aliases"
 
 # Docker Shortcuts
-alias dc="docker-compose"
+alias dc="docker-compose" 
 alias dcu="docker-compose up"
 alias dcd="docker-compose down"
 alias dcb="docker-compose build"
@@ -60,4 +60,4 @@ alias di="docker images"
 # VS Code Shortcuts
 alias code.="code ."
 alias codeh="code ~"
-alias codeproj="code ~/github" 
+alias codeproj="code ~/Github" 

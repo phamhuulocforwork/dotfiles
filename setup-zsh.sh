@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Create github directory if it doesn't exist
-if [ ! -d ~/github ]; then
-mkdir ~/github
+if [ ! -d ~/Github ]; then
+mkdir ~/Github
 fi
 
 # Install zsh-autosuggestions
