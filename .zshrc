@@ -40,7 +40,7 @@ function mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
-function gitinit() {
+function ginit() {
     git init
     git add .
     git commit -m "feat: initial commit"
