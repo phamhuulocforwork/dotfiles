@@ -45,6 +45,43 @@ else
     echo -e "${YELLOW}⚠️  Oh My Zsh already installed${NC}"
 fi
 
+# Install nvm (Node Version Manager)
+echo -e "${BLUE}📦 Installing nvm (Node Version Manager)...${NC}"
+if [ ! -d ~/.nvm ]; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    echo -e "${GREEN}✅ nvm installed successfully${NC}"
+    
+    # Load nvm for current session
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    
+    # Install and use Node.js LTS
+    echo -e "${BLUE}🟢 Installing Node.js LTS...${NC}"
+    nvm install --lts
+    nvm use --lts
+    nvm alias default lts/*
+    
+    echo -e "${GREEN}✅ Node.js LTS installed: $(node --version)${NC}"
+    echo -e "${GREEN}✅ npm version: $(npm --version)${NC}"
+else
+    echo -e "${YELLOW}⚠️  nvm already installed${NC}"
+    
+    # Load nvm and check Node.js
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    
+    if command -v node &> /dev/null; then
+        echo -e "${GREEN}✅ Node.js already available: $(node --version)${NC}"
+    else
+        echo -e "${BLUE}🟢 Installing Node.js LTS...${NC}"
+        nvm install --lts
+        nvm use --lts
+        nvm alias default lts/*
+        echo -e "${GREEN}✅ Node.js LTS installed: $(node --version)${NC}"
+    fi
+fi
+
 # Create github directory if it doesn't exist
 echo -e "${BLUE}📁 Creating Github directory...${NC}"
 if [ ! -d ~/Github ]; then

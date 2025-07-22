@@ -49,6 +49,7 @@ chmod +x setup.sh
 - System updates and essential package installation
 - Zsh installation and verification
 - Oh My Zsh installation
+- nvm (Node Version Manager) and Node.js LTS installation
 - Plugin installation (zsh-autosuggestions, zsh-syntax-highlighting)
 - Catppuccin theme setup
 - SSH key configuration (if available)
