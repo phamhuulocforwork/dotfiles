@@ -25,32 +25,7 @@ wsl --install -d Ubuntu
 
 Open WSL Ubuntu and create user account when prompted.
 
-```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
-
-# Install essential packages
-sudo apt install -y curl git wget
-```
-
-### 🐚 Step 3: Install Zsh
-
-```bash
-# Install Zsh
-sudo apt install -y zsh
-
-# Verify installation
-zsh --version
-```
-
-### ⚡ Step 4: Install Oh My Zsh
-
-```bash
-# Install Oh My Zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-### 📁 Step 5: Clone and Apply Dotfiles
+### 📁 Step 3: Clone and Apply Dotfiles
 
 ```bash
 # Clone dotfiles repository
@@ -60,19 +35,30 @@ git clone https://github.com/phamhuulocforwork/dotfiles.git
 # Navigate to dotfiles directory
 cd dotfiles
 
-# Apply configuration
+# Apply configuration (optional - for additional config files)
 chmod +x config.sh
 ./config.sh
 
-# Run setup script
-chmod +x setup-zsh.sh
-./setup-zsh.sh
+# Run automated setup script (this will handle everything!)
+chmod +x setup.sh
+./setup.sh
 ```
 
-### 🎨 Step 6: Finalize Installation
+**The setup script will automatically handle:**
+
+- System updates and essential package installation
+- Zsh installation and verification
+- Oh My Zsh installation
+- Plugin installation (zsh-autosuggestions, zsh-syntax-highlighting)
+- Catppuccin theme setup
+- SSH key configuration (if available)
+- Zsh configuration application
+- Setting Zsh as default shell
+
+### 🎨 Step 4: Finalize Installation
 
 ```bash
-# Restart terminal or
+# Restart terminal or reload configuration
 source ~/.zshrc
 
 # Verify theme is applied
@@ -105,10 +91,10 @@ reload
 
 ```txt
 dotfiles/
-├── .zshrc                    # Main Zsh configuration
+├── .zshrc                   # Main Zsh configuration
 ├── .zsh_aliases             # Custom aliases
 ├── .gitconfig               # Git configuration
-├── setup-zsh.sh             # Zsh setup script
+├── setup.sh                 # Automated setup script
 ├── config.sh                # Dotfiles deployment script
 ├── reload-dotfiles.sh       # Reload configuration script
 └── README.md                # This file

@@ -8,5 +8,5 @@ do
 done
 
 # Set execute permissions for scripts
-chmod +x ~/dotfiles/setup-zsh.sh
+chmod +x ~/dotfiles/setup.sh
 chmod +x ~/dotfiles/reload-dotfiles.sh
