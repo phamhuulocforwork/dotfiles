@@ -26,29 +26,6 @@ source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 # Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
-# Windows Development Aliases
-alias github="cd ~/Github"
-alias code="code ."
-alias ll="ls -la"
-alias la="ls -la"
-alias ..="cd .."
-alias ...="cd ../.."
-
-# Git Aliases
-alias gs="git status"
-alias ga="git add"
-alias gc="git commit"
-alias gp="git push"
-alias gl="git pull"
-alias gco="git checkout"
-alias gb="git branch"
-
-# Node.js Development
-alias ni="npm install"
-alias ns="npm start"
-alias nt="npm test"
-alias nb="npm run build"
-
 # Windows Path Integration
 export PATH="/mnt/c/Program Files/Microsoft VS Code/bin:$PATH"
 export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
@@ -66,7 +43,16 @@ function mkcd() {
 function gitinit() {
     git init
     git add .
-    git commit -m "Initial commit"
+    git commit -m "feat: initial commit"
+}
+
+function gclone() {
+    git clone "git@github.com:phamhuulocforwork/$1.git"
+    if [ "$2" ]; then
+        cd "$2"
+    else
+        cd "$1"
+    fi
 }
 
 function clone() {
