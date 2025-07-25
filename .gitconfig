@@ -15,3 +15,6 @@
     la = !eza --git --group-directories-first --icons -la
 [core]
     autocrlf = input
+[credential]
+    helper = "/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"
+  
