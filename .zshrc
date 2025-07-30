@@ -64,6 +64,23 @@ function clone() {
     fi
 }
 
+venv_list() {
+  echo "List of 'venv' directories to be deleted:"
+  find . -type d -name "venv"
+}
+
+venv_clean() {
+  echo "Deleting 'venv' folders..."
+  find . -type d -name "venv" -exec rm -rf {} +
+  echo "Done"
+}
+
+npkill() {
+  echo "Deleting 'node_modules' ..."
+  find . -type d -name "node_modules" -exec rm -rf {} +
+  echo "Done"
+}
+
 # Load custom aliases
 if [ -f ~/.zsh_aliases ]; then
     source ~/.zsh_aliases
