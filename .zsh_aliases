@@ -62,5 +62,6 @@ alias di="docker images"
 
 # VS Code Shortcuts
 alias code="code ."
+alias cursor="cursor ."
 alias codeh="code ~"
-alias codeproj="code ~/Github" 
+alias cursorh="cursor ~"
