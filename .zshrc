@@ -20,9 +20,6 @@ plugins=(
     github
 )
 
-# Source Catppuccin theme for zsh-syntax-highlighting BEFORE Oh My Zsh is sourced
-source ~/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
-
 # Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
