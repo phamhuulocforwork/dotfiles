@@ -1,6 +1,6 @@
 [user]
-	name = Pham Huu Loc
-	email = phamhuulocforwork@gmail.com
+  name = Pham Huu Loc
+  email = phamhuulocforwork@gmail.com
 [init]
   defaultBranch = main
 [color]
@@ -10,11 +10,11 @@
   branch = auto
   interactive = auto
 [alias]
-    ls = !eza --git --group-directories-first --icons
-    ll = !eza --git --group-directories-first --icons -l
-    la = !eza --git --group-directories-first --icons -la
+  ls = !eza --git --group-directories-first --icons
+  ll = !eza --git --group-directories-first --icons -l
+  la = !eza --git --group-directories-first --icons -la
 [core]
-    autocrlf = input
+  autocrlf = input
+  ignorecase = false
 [credential]
-    helper = "/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"
-  
+  helper = "/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe"
