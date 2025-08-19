@@ -89,9 +89,8 @@ fi
 echo -e "${BLUE}Installing uv (Python package manager)...${NC}"
 if ! command -v uv &> /dev/null; then
     curl -LsSf https://astral.sh/uv/install.sh | sh
-
-    source $HOME/.local/bin/env (sh, bash, zsh)
-    source $HOME/.local/bin/env.fish (fish)
+    
+    export PATH="$HOME/.cargo/bin:$PATH"
     
     echo -e "${GREEN}uv installed successfully${NC}"
 else
