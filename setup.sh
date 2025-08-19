@@ -68,6 +68,36 @@ else
     fi
 fi
 
+echo -e "${BLUE}Installing Homebrew...${NC}"
+if ! command -v brew &> /dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+    test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+    test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    
+    echo >> ~/.zshrc
+    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.zshrc
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    
+    sudo apt-get install -y build-essential
+
+    echo -e "${GREEN}Homebrew installed successfully${NC}"
+else
+    echo -e "${YELLOW}Homebrew already installed${NC}"
+fi
+
+echo -e "${BLUE}Installing uv (Python package manager)...${NC}"
+if ! command -v uv &> /dev/null; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+    
+    echo -e "${GREEN}uv installed successfully${NC}"
+else
+    echo -e "${YELLOW}uv already installed${NC}"
+fi
+
 echo -e "${BLUE}Creating Github directory...${NC}"
 if [ ! -d ~/Github ]; then
     mkdir ~/Github
