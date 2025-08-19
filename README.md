@@ -76,16 +76,6 @@ echo $ZSH_THEME
 - **Aliases**: Useful shortcuts for development
 - **Functions**: `mkcd`, `gitinit`, `clone` functions
 
-### 📝 Reload Dotfiles
-
-```bash
-# Reload configuration after editing
-./reload-dotfiles.sh
-
-# Or use alias
-reload
-```
-
 ---
 
 ## 📂 Repository Structure
@@ -97,7 +87,6 @@ dotfiles/
 ├── .gitconfig               # Git configuration
 ├── setup.sh                 # Automated setup script
 ├── config.sh                # Dotfiles deployment script
-├── reload-dotfiles.sh       # Reload configuration script
 └── README.md                # This file
 ```
 

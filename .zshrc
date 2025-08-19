@@ -1,12 +1,9 @@
-# Oh My Zsh Configuration
 export ZSH="$HOME/.oh-my-zsh"
 
-# Theme
 ZSH_THEME="catppuccin"
 CATPPUCCIN_FLAVOR="mocha"
 CATPPUCCIN_SHOW_TIME=false
 
-# Plugins
 plugins=(
     git
     zsh-autosuggestions
@@ -15,24 +12,19 @@ plugins=(
     docker-compose
     npm
     node
-    yarn
     vscode
     github
 )
 
-# Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
-# Windows Path Integration
 export PATH="/mnt/c/Program Files/Microsoft VS Code/bin:$PATH"
 export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
 
-# Auto cd to projects directory on startup
 if [[ "$PWD" == "$HOME" ]]; then
     cd ~/Github
 fi
 
-# Custom Functions
 function mkcd() {
     mkdir -p "$1" && cd "$1"
 }
@@ -78,7 +70,6 @@ npkill() {
   echo "Done"
 }
 
-# Load custom aliases
 if [ -f ~/.zsh_aliases ]; then
     source ~/.zsh_aliases
 fi
@@ -87,5 +78,5 @@ export EDITOR="code"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
