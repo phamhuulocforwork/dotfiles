@@ -44,26 +44,40 @@ function gclone() {
     fi
 }
 
-function gcloneb() {
+function mclone() {
   local file="$1"
-  local dest="${2:-cloned_repos}"
 
-  if [[ ! -f "$file" ]]; then
-    echo "File not found."
+  if [[ -z "$file" || ! -f "$file" ]]; then
+    echo "Usage: mclone <file_with_repo_urls>"
     return 1
   fi
 
-  mkdir -p "$dest"
-
-  while IFS= read -r repo; do
-    if [[ -z "$repo" || "$repo" == \#* ]]; then
-      continue
-    fi
-
-    echo "Cloning $repo ..."
-    git clone "$repo" "$dest/$(basename -s .git "$repo")"
+  local repos=()
+  while IFS= read -r line; do
+    line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    [[ -z "$line" || "$line" =~ ^# ]] && continue
+    repos+=("$line")
   done < "$file"
+
+  local n=${#repos[@]}
+  if [[ $n -eq 0 ]]; then
+    echo "File does not have a valid repo"
+    return 1
+  fi
+
+  echo "Cloning $n repos in parallel..."
+
+  if command -v parallel >/dev/null 2>&1; then
+    printf "%s\n" "${repos[@]}" | parallel -j "$n" 'git clone "{}"'
+  else
+    for repo in "${repos[@]}"; do
+      git clone "$repo" &
+    done
+    wait
+  fi
 }
+
+
 
 function clone() {
     git clone "$1"
