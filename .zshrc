@@ -44,6 +44,27 @@ function gclone() {
     fi
 }
 
+function gcloneb() {
+  local file="$1"
+  local dest="${2:-cloned_repos}"
+
+  if [[ ! -f "$file" ]]; then
+    echo "File not found."
+    return 1
+  fi
+
+  mkdir -p "$dest"
+
+  while IFS= read -r repo; do
+    if [[ -z "$repo" || "$repo" == \#* ]]; then
+      continue
+    fi
+
+    echo "Cloning $repo ..."
+    git clone "$repo" "$dest/$(basename -s .git "$repo")"
+  done < "$file"
+}
+
 function clone() {
     git clone "$1"
     if [ "$2" ]; then
