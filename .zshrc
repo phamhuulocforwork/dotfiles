@@ -20,6 +20,7 @@ source $ZSH/oh-my-zsh.sh
 
 export PATH="/mnt/c/Program Files/Microsoft VS Code/bin:$PATH"
 export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 if [[ "$PWD" == "$HOME" ]]; then
     cd ~/Github
