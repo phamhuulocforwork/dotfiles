@@ -78,8 +78,6 @@ function mclone() {
   fi
 }
 
-
-
 function clone() {
     git clone "$1"
     if [ "$2" ]; then
@@ -89,18 +87,34 @@ function clone() {
     fi
 }
 
-venv_list() {
-  echo "List of 'venv' directories to be deleted:"
-  find . -type d -name "venv"
+function wsl-clean() {
+  echo "Cleaning temp files in /tmp and /var/tmp..."
+  sudo rm -rf /tmp/* /var/tmp/*
+
+  echo "Cleaning apt cache..."
+  if command -v apt-get &>/dev/null; then
+    sudo apt-get clean -y
+    sudo apt-get autoclean -y
+    sudo apt-get autoremove -y
+  fi
+
+  echo "Cleaning pip, npm, and user cache..."
+  rm -rf ~/.cache/pip ~/.npm ~/.cache/* ~/.local/share/*Trash*/files/*
+
+  echo "Cleaning old logs..."
+  sudo journalctl --vacuum-time=7d
+  sudo rm -rf /var/log/*.gz /var/log/*.[0-9]
+
+  echo "Done!"
 }
 
-venv_clean() {
+function venv-clean() {
   echo "Deleting 'venv' folders..."
   find . -type d -name "venv" -exec rm -rf {} +
   echo "Done"
 }
 
-npkill() {
+function npkill() {
   echo "Deleting 'node_modules' ..."
   find . -type d -name "node_modules" -exec rm -rf {} +
   echo "Done"
