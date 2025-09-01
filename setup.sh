@@ -20,12 +20,26 @@ echo -e "${BLUE}Installing essential packages...${NC}"
 sudo apt install -y curl git wget zsh apt-transport-https ca-certificates curl gnupg lsb-release
 
 echo -e "${BLUE}Installing Docker...${NC}"
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# Create keyrings directory if it doesn't exist
+sudo install -m 0755 -d /etc/apt/keyrings
+# Add Docker's official GPG key
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+# Add Docker repository
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
-sudo systemctl start docker
-sudo systemctl enable docker
+# Install Docker packages
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin
+# Handle WSL vs native Linux differences
+if grep -qi microsoft /proc/version; then
+    echo -e "${YELLOW}WSL detected - Docker service management may require special handling${NC}"
+    echo -e "${YELLOW}Consider using Docker Desktop for Windows for better WSL integration${NC}"
+    # Try to start Docker service (may not work in WSL)
+    sudo service docker start || echo -e "${YELLOW}Docker service start failed - this is normal in WSL${NC}"
+else
+    sudo systemctl enable docker
+    sudo systemctl start docker
+fi
 sudo usermod -aG docker $USER
 echo -e "${GREEN}Docker installed successfully${NC}"
 
