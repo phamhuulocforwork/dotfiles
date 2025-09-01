@@ -17,7 +17,17 @@ echo -e "${BLUE}Updating system packages...${NC}"
 sudo apt update && sudo apt upgrade -y
 
 echo -e "${BLUE}Installing essential packages...${NC}"
-sudo apt install -y curl git wget zsh
+sudo apt install -y curl git wget zsh apt-transport-https ca-certificates curl gnupg lsb-release
+
+echo -e "${BLUE}Installing Docker...${NC}"
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+echo -e "${GREEN}Docker installed successfully${NC}"
 
 echo -e "${BLUE}Verifying Zsh installation...${NC}"
 if command -v zsh &> /dev/null; then
