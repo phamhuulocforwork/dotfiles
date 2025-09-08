@@ -1,3 +1,4 @@
+#!/bin/bash
 DOTFILES=".gitconfig .zshrc .zsh_aliases"
 
 for dotfile in $(echo ${DOTFILES[*]});
