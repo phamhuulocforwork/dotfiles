@@ -193,6 +193,18 @@ sudo sed -i '/^#en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 sudo locale-gen
 sudo localectl set-locale LANG=en_US.UTF-8
 
+# ----------------------------------------------------------
+# Copy configs
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Copying configs...${RESET}"
+if [[ -f $SCRIPT_DIR/copy-configs.sh ]]; then
+    bash $SCRIPT_DIR/copy-configs.sh
+    echo -e "${OK}==> Copying configs completed.${RESET}"
+else
+    echo -e "${ERROR}Error: copy-configs.sh not found in dotfiles directory.${RESET}"
+    exit 1
+fi
+
 # FIXME: Để sau
 # # ----------------------------------------------------------
 # # Set up terminal environment
