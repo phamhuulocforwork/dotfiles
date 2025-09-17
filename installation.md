@@ -106,9 +106,9 @@ mkfs.vfat -F32 /dev/nvme0n1p1
 ### Mount Partitions
 
 ```sh [sh]
-mount /dev/nvme0n1p1 /mnt
+mount /dev/nvme0n1p2 /mnt
 mkdir /mnt/boot
-mount /dev/nvme0n1p2 /mnt/boot
+mount /dev/nvme0n1p1 /mnt/boot
 ```
 
 ## Step 5: Update System and Launch Installer
@@ -265,6 +265,15 @@ The `archinstall` script will present a menu. Configure each option:
      ```
 
 > After these steps, your system should be able to boot properly using GRUB.
+
+### Alternative: rEFInd Boot Manager
+
+If you prefer rEFInd over GRUB as your boot manager:
+
+```sh
+pacman -S refind
+refind-install
+```
 
 ## Step 8: Post-Installation
 
