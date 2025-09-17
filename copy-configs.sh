@@ -8,4 +8,6 @@ cp -r -l $HOME/.config/rofi/ ./.config
 cp -r -l $HOME/.config/waybar/ ./.config
 cp -r -l $HOME/.config/wlogout/ ./.config
 cp -r -l $HOME/.zshrc ./zsh
+cp -r -l $HOME/.zsh_aliases ./zsh
 cp -r -l $HOME/.p10k.zsh ./zsh
+cp -r -l $HOME/.gitconfig ./
