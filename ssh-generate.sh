@@ -54,7 +54,7 @@ if [ ! -f "$SSH_KEY" ]; then
     ssh-keygen -t ed25519 -C "phamhuulocforwork@gmail.com" -f "$SSH_KEY" -N ""
     echo -e "${OK}SSH key generated at $SSH_KEY${RESET}"
 else
-    echo -e "${YELLOW}SSH key already exists at $SSH_KEY${RESET}"
+    echo -e "${WARN}SSH key already exists at $SSH_KEY${RESET}"
 fi
 
 # ----------------------------------------------------------
@@ -67,6 +67,6 @@ elif command -v xclip &>/dev/null; then
     cat "$SSH_KEY.pub" | xclip -selection clipboard
     echo -e "${OK}SSH public key copied to clipboard (X11)${RESET}"
 else
-    echo -e "${YELLOW}Neither wl-copy nor xclip found. Please install one to copy SSH key to clipboard.${RESET}"
-    echo -e "${YELLOW}You can still get your key with: cat $SSH_KEY.pub${RESET}"
+    echo -e "${WARN}Neither wl-copy nor xclip found. Please install one to copy SSH key to clipboard.${RESET}"
+    echo -e "${WARN}You can still get your key with: cat $SSH_KEY.pub${RESET}"
 fi

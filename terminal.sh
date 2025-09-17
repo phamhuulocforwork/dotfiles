@@ -121,7 +121,7 @@ if [ -f "$EXTERNALLY_MANAGED_FILE" ]; then
     sudo rm -f "$EXTERNALLY_MANAGED_FILE"
     echo -e "${OK}Removed $EXTERNALLY_MANAGED_FILE${RESET}"
 else
-    echo -e "${YELLOW}No EXTERNALLY-MANAGED file found${RESET}"
+    echo -e "${WARN}No EXTERNALLY-MANAGED file found${RESET}"
 fi
 
 # ----------------------------------------------------------
@@ -143,7 +143,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     echo -e "${OK}Oh My Zsh installed${RESET}"
 else
-    echo -e "${YELLOW}Oh My Zsh already installed${RESET}"
+    echo -e "${WARN}Oh My Zsh already installed${RESET}"
 fi
 
 # ----------------------------------------------------------
@@ -167,7 +167,7 @@ if ! command -v uv &>/dev/null; then
     export PATH="$HOME/.cargo/bin:$PATH"
     echo -e "${OK}uv installed${RESET}"
 else
-    echo -e "${YELLOW}uv already installed${RESET}"
+    echo -e "${WARN}uv already installed${RESET}"
 fi
 
 # ----------------------------------------------------------
@@ -179,7 +179,7 @@ if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]
         "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
     echo -e "${OK}zsh-autosuggestions installed${RESET}"
 else
-    echo -e "${YELLOW}zsh-autosuggestions already installed${RESET}"
+    echo -e "${WARN}zsh-autosuggestions already installed${RESET}"
 fi
 
 # ----------------------------------------------------------
@@ -191,7 +191,7 @@ if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlightin
         "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
     echo -e "${OK}zsh-syntax-highlighting installed${RESET}"
 else
-    echo -e "${YELLOW}zsh-syntax-highlighting already installed${RESET}"
+    echo -e "${WARN}zsh-syntax-highlighting already installed${RESET}"
 fi
 
 # ----------------------------------------------------------
