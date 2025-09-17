@@ -1,12 +1,31 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' 
+# ----------------------------------------------------------
+# Log Details
+# ----------------------------------------------------------
+mkdir -p "$HOME/dotfiles_log"
+LOG_FILE="$HOME/dotfiles_log/terminal.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
 
+# ----------------------------------------------------------
+# Color-coded status labels
+# ----------------------------------------------------------
+ERROR="$(tput setaf 1)[ERROR]$(tput sgr0)"
+WARN="$(tput setaf 3)[WARN]$(tput sgr0)"
+OK="$(tput setaf 2)[OK]$(tput sgr0)"
+NOTE="$(tput setaf 6)[NOTE]$(tput sgr0)"
+ACTION="$(tput setaf 5)[ACTION]$(tput sgr0)"
+RESET="$(tput sgr0)"
+CYAN="$(tput setaf 6)"
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+BLUE="$(tput setaf 4)"
+MAGENTA="$(tput setaf 5)"
+
+# ----------------------------------------------------------
+# Packages
+# ----------------------------------------------------------
 pacman_packages=(
     # System monitoring and fun terminal visuals
     btop cmatrix fastfetch
@@ -26,90 +45,159 @@ aur_packages=(
     zen-browser-bin
 )
 
-echo -e "${BLUE}==> Installing pacman packages...${NC}"
+# ----------------------------------------------------------
+# Check if command exists
+# ----------------------------------------------------------
+_checkCommandExists() {
+    cmd="$1"
+    if ! command -v "$cmd" >/dev/null; then
+        echo 1
+        return
+    fi
+    echo 0
+    return
+}
+
+# ----------------------------------------------------------
+# Check if package is already installed
+# ----------------------------------------------------------
+_isInstalled() {
+    pkg="$1"
+    # Check pacman
+    pacman_check="$(sudo pacman -Qs --color always "${pkg}" | grep "local" | grep "${pkg} ")"
+    if [ -n "${pacman_check}" ]; then
+        echo 0
+        return # true
+    fi
+    # Check AUR (yay)
+    if command -v yay &>/dev/null; then
+        aur_check="$(yay -Qs "${pkg}" | grep "local" | grep "${pkg} ")"
+        if [ -n "${aur_check}" ]; then
+            echo 0
+            return # true
+        fi
+    fi
+    echo 1
+    return # false
+}
+
+# ----------------------------------------------------------
+# Initial Bannar
+# ----------------------------------------------------------
+clear
+echo -e "\n"
+echo -e "${CYAN}     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗     ${RESET}"
+echo -e "${CYAN}     ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║     ${RESET}"
+echo -e "${CYAN}        ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║     ${RESET}"
+echo -e "${CYAN}        ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║     ${RESET}"
+echo -e "${CYAN}        ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗${RESET}"
+echo -e "${CYAN}        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝${RESET}"
+echo -e "\n"
+
+echo -e "${NOTE}==> Installing pacman packages...${RESET}"
 sudo pacman -Syu --noconfirm "${pacman_packages[@]}"
 
-echo -e "${BLUE}==> Installing AUR packages...${NC}"
+echo -e "${NOTE}==> Installing AUR packages...${RESET}"
 yay -S --noconfirm "${aur_packages[@]}"
 
-# -------------------- Docker --------------------
-echo -e "${BLUE}==> Setting up Docker...${NC}"
+# ----------------------------------------------------------
+# Setting up Docker
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Setting up Docker...${RESET}"
 if command -v docker &>/dev/null; then
     sudo systemctl enable --now docker.service
     sudo usermod -aG docker "${USER:-$(id -un)}"
-    echo -e "${GREEN}Docker installed and enabled${NC}"
+    echo -e "${OK}Docker installed and enabled${RESET}"
 else
-    echo -e "${RED}Docker is not installed. Skipping setup.${NC}"
+    echo -e "${RED}Docker is not installed. Skipping setup.${RESET}"
 fi
 
-# -------------------- Python pip --------------------
-echo -e "${BLUE}==> Allow pip install by removing EXTERNALLY-MANAGED file${NC}"
+# ----------------------------------------------------------
+# Allow pip install by removing EXTERNALLY-MANAGED file
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Allow pip install by removing EXTERNALLY-MANAGED file${RESET}"
 EXTERNALLY_MANAGED_FILE=$(python3 -c "import sys; print(f'/usr/lib/python{sys.version_info.major}.{sys.version_info.minor}/EXTERNALLY-MANAGED')")
 if [ -f "$EXTERNALLY_MANAGED_FILE" ]; then
     sudo rm -f "$EXTERNALLY_MANAGED_FILE"
-    echo -e "${GREEN}Removed $EXTERNALLY_MANAGED_FILE${NC}"
+    echo -e "${OK}Removed $EXTERNALLY_MANAGED_FILE${RESET}"
 else
-    echo -e "${YELLOW}No EXTERNALLY-MANAGED file found${NC}"
+    echo -e "${YELLOW}No EXTERNALLY-MANAGED file found${RESET}"
 fi
 
-# -------------------- Zsh --------------------
-echo -e "${BLUE}==> Verifying Zsh installation...${NC}"
+# ----------------------------------------------------------
+# Verifying Zsh installation
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Verifying Zsh installation...${RESET}"
 if command -v zsh &>/dev/null; then
-    echo -e "${GREEN}Zsh installed: $(zsh --version)${NC}"
+    echo -e "${OK}Zsh installed: $(zsh --version)${RESET}"
 else
-    echo -e "${RED}Zsh installation failed${NC}"
+    echo -e "${RED}Zsh installation failed${RESET}"
     exit 1
 fi
 
-echo -e "${BLUE}==> Installing Oh My Zsh...${NC}"
+# ----------------------------------------------------------
+# Installing Oh My Zsh
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Installing Oh My Zsh...${RESET}"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    echo -e "${GREEN}Oh My Zsh installed${NC}"
+    echo -e "${OK}Oh My Zsh installed${RESET}"
 else
-    echo -e "${YELLOW}Oh My Zsh already installed${NC}"
+    echo -e "${YELLOW}Oh My Zsh already installed${RESET}"
 fi
 
-# Set Zsh as default shell
+# ----------------------------------------------------------
+# Setting Zsh as default shell
+# ----------------------------------------------------------
 if [ "$SHELL" != "$(which zsh)" ]; then
-    echo -e "${BLUE}==> Setting Zsh as default shell...${NC}"
+    echo -e "${NOTE}==> Setting Zsh as default shell...${RESET}"
     chsh -s "$(which zsh)"
-    echo -e "${GREEN}Zsh set as default shell${NC}"
+    echo -e "${OK}Zsh set as default shell${RESET}"
 fi
 
-# -------------------- uv (Python package manager) --------------------
-echo -e "${BLUE}==> Installing uv...${NC}"
+# ----------------------------------------------------------
+# Installing uv (Python package manager)
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Installing uv...${RESET}"
 if ! command -v uv &>/dev/null; then
     curl -LsSf https://astral.sh/uv/install.sh | sh
     if ! grep -q 'cargo/bin' "$HOME/.zshrc"; then
         echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$HOME/.zshrc"
     fi
     export PATH="$HOME/.cargo/bin:$PATH"
-    echo -e "${GREEN}uv installed${NC}"
+    echo -e "${OK}uv installed${RESET}"
 else
-    echo -e "${YELLOW}uv already installed${NC}"
+    echo -e "${YELLOW}uv already installed${RESET}"
 fi
 
-# -------------------- Zsh Plugins --------------------
-echo -e "${BLUE}==> Installing zsh-autosuggestions...${NC}"
+# ----------------------------------------------------------
+# Installing zsh-autosuggestions
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Installing zsh-autosuggestions...${RESET}"
 if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
     git clone https://github.com/zsh-users/zsh-autosuggestions \
         "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
-    echo -e "${GREEN}zsh-autosuggestions installed${NC}"
+    echo -e "${OK}zsh-autosuggestions installed${RESET}"
 else
-    echo -e "${YELLOW}zsh-autosuggestions already installed${NC}"
+    echo -e "${YELLOW}zsh-autosuggestions already installed${RESET}"
 fi
 
-echo -e "${BLUE}==> Installing zsh-syntax-highlighting...${NC}"
+# ----------------------------------------------------------
+# Installing zsh-syntax-highlighting
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Installing zsh-syntax-highlighting...${RESET}"
 if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
         "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
-    echo -e "${GREEN}zsh-syntax-highlighting installed${NC}"
+    echo -e "${OK}zsh-syntax-highlighting installed${RESET}"
 else
-    echo -e "${YELLOW}zsh-syntax-highlighting already installed${NC}"
+    echo -e "${YELLOW}zsh-syntax-highlighting already installed${RESET}"
 fi
 
-# -------------------- Theme --------------------
-echo -e "${BLUE}==> Installing Catppuccin Zsh theme...${NC}"
+# ----------------------------------------------------------
+# Installing Catppuccin Zsh theme
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Installing Catppuccin Zsh theme...${RESET}"
 THEME_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/catppuccin-zsh"
 if [ ! -d "$THEME_DIR" ]; then
     git clone https://github.com/JannoTjarks/catppuccin-zsh.git "$THEME_DIR"
@@ -121,8 +209,8 @@ ln -sf "$THEME_DIR/catppuccin-flavors/"* "$HOME/.oh-my-zsh/custom/themes/catppuc
 
 if ! grep -q 'ZSH_THEME="catppuccin"' "$HOME/.zshrc"; then
     sed -i 's/^ZSH_THEME=.*/ZSH_THEME="catppuccin"/' "$HOME/.zshrc"
-    echo -e "${GREEN}Zsh theme set to Catppuccin${NC}"
+    echo -e "${OK}Zsh theme set to Catppuccin${RESET}"
 fi
 
-echo -e "${GREEN}Setup complete! Please restart your terminal or run 'source ~/.zshrc'${NC}"
-echo -e "${BLUE}To verify the theme is applied, run: echo \$ZSH_THEME${NC}" 
+echo -e "${OK}Setup complete! Please restart your terminal or run 'source ~/.zshrc'${RESET}"
+echo -e "${NOTE}To verify the theme is applied, run: echo \$ZSH_THEME${RESET}" 

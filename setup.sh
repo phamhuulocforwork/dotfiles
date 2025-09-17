@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
-# ===========================
+# ----------------------------------------------------------
+# Log Details
+# ----------------------------------------------------------
+mkdir -p "$HOME/dotfiles_log"
+LOG_FILE="$HOME/dotfiles_log/install.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+# ----------------------------------------------------------
 # Color-coded status labels
-# ===========================
+# ----------------------------------------------------------
 ERROR="$(tput setaf 1)[ERROR]$(tput sgr0)"
 WARN="$(tput setaf 3)[WARN]$(tput sgr0)"
 OK="$(tput setaf 2)[OK]$(tput sgr0)"
@@ -16,16 +23,99 @@ GREEN="$(tput setaf 2)"
 BLUE="$(tput setaf 4)"
 MAGENTA="$(tput setaf 5)"
 
-# ===========================
-# Log Details
-# ===========================
-mkdir -p "$HOME/dotfiles_log"
-LOG_FILE="$HOME/dotfiles_log/install.log"
-exec > >(tee -a "$LOG_FILE") 2>&1
+# ----------------------------------------------------------
+# Packages
+# ----------------------------------------------------------
+packages=(
+    "wget"
+    "unzip"
+    "git"
+    "gum"    
+    "hyprland"
+    "waybar"
+    "rofi-wayland"
+    "kitty"
+    "dunst"
+    "thunar"
+    "xdg-desktop-portal-hyprland"
+    "qt5-wayland"
+    "qt6-wayland"
+    "hyprpaper"
+    "hyprlock"
+    "firefox"
+    "ttf-font-awesome"
+    "vim"
+    "fastfetch"
+    "ttf-fira-sans" 
+    "ttf-fira-code" 
+    "ttf-firacode-nerd"
+    "jq"
+    "brightnessctl"
+    "networkmanager"
+    "wireplumber"
+    "wlogout"
+    "flatpak"
+)
 
-# ==========================
+# ----------------------------------------------------------
+# Check if command exists
+# ----------------------------------------------------------
+_checkCommandExists() {
+    cmd="$1"
+    if ! command -v "$cmd" >/dev/null; then
+        echo 1
+        return
+    fi
+    echo 0
+    return
+}
+
+# ----------------------------------------------------------
+# Check if package is already installed
+# ----------------------------------------------------------
+_isInstalled() {
+    package="$1"
+    check="$(sudo pacman -Qs --color always "${package}" | grep "local" | grep "${package} ")"
+    if [ -n "${check}" ]; then
+        echo 0
+        return #true
+    fi
+    echo 1
+    return #false
+}
+
+# ----------------------------------------------------------
+# Install yay
+# ----------------------------------------------------------
+_installYay() {
+    _installPackages "base-devel"
+    SCRIPT=$(realpath "$0")
+    temp_path=$(dirname "$SCRIPT")
+    git clone https://aur.archlinux.org/yay.git $download_folder/yay
+    cd $download_folder/yay
+    makepkg -si
+    cd $temp_path
+    echo ":: yay has been installed successfully."
+}
+
+# ----------------------------------------------------------
+# Install packages
+# ----------------------------------------------------------
+_installPackages() {
+    toInstall=()
+    for pkg; do
+        if [[ $(_isInstalled "${pkg}") == 0 ]]; then
+            echo ":: ${pkg} is already installed."
+            continue
+        fi
+        echo "Package not installed: ${pkg}"
+        yay --noconfirm -S "${pkg}"
+    done
+}
+
+# ----------------------------------------------------------
 # Initial Bannar
-# =========================
+# ----------------------------------------------------------
 clear
 echo -e "\n"
 echo -e "${CYAN}     ███████╗███████╗████████╗██╗   ██╗██████╗ ${RESET}"
@@ -34,19 +124,11 @@ echo -e "${CYAN}     ███████╗█████╗     ██║   
 echo -e "${CYAN}     ╚════██║██╔══╝     ██║   ██║   ██║██╔═══╝ ${RESET}"
 echo -e "${CYAN}     ███████║███████╗   ██║   ╚██████╔╝██║     ${RESET}"
 echo -e "${CYAN}     ╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ${RESET}"
-echo -e "${RED}     ✻───────────────phamhuuloc───────────────✻${RESET}"
-echo -e "${GREEN}     Welcome to dotfiles! lets begin setup 👋 ${RESET}"
 echo -e "\n"
 
-# ===========================
-# Define script directory
-# ===========================
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-
-# ===========================
+# ----------------------------------------------------------
 # Ask for sudo once, keep it alive
-# ===========================
+# ----------------------------------------------------------
 echo "${NOTE} Asking for sudo password^^...${RESET}"
 sudo -v
 
@@ -60,147 +142,82 @@ keep_sudo_alive &
 SUDO_KEEP_ALIVE_PID=$!
 trap 'kill $SUDO_KEEP_ALIVE_PID' EXIT
 
-# ===========================
-# Define modules to be stowed
-# ===========================
-MODULES=(git zsh .config)
-
-if ! grep -qi "arch" /etc/os-release; then
-    echo -e "${YELLOW}Warning: This script is designed for Hyprland on an Arch-based system${NC}"
-    read -p "Continue anyway? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
-    fi
-fi
-
-# ===========================
+# ----------------------------------------------------------
 # Update system packages
-# ===========================
+# ----------------------------------------------------------
 cd ~
 
-echo -e "${BLUE}Updating system packages...${NC}"
+echo -e "${NOTE}Updating system packages...${RESET}"
 sudo pacman -Syu --noconfirm
 
-if ! command -v yay &> /dev/null; then
-    echo -e "${BLUE}Setup yay...${NC}"
-    sudo pacman -S --noconfirm --needed base-devel git
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si --noconfirm
-    cd ~
-    rm -rf ~/yay
+while true; do
+    read -p "DO YOU WANT TO START THE PACKAGE INSTALLATION NOW? (Yy/Nn): " yn
+    case $yn in
+        [Yy]*)
+            echo ":: Installation started."
+            echo
+            break
+            ;;
+        [Nn]*)
+            echo ":: Installation canceled"
+            exit
+            break
+            ;;
+        *)
+            echo ":: Please answer yes or no."
+            ;;
+    esac
+done
+
+# Install yay if needed
+if [[ $(_checkCommandExists "yay") == 0 ]]; then
+    echo ":: yay is already installed"
 else
-    echo -e "${GREEN}yay is already installed.${NC}"
+    echo ":: The installer requires yay. yay will be installed now"
+    _installYay
 fi
 
-# ===========================
+# Packages
+_installPackages "${packages[@]}"
+
+# ----------------------------------------------------------
+# Define script directory
+# ----------------------------------------------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ----------------------------------------------------------
 # Set locale
-# ===========================
-echo -e "${BLUE}Setting locale...${NC}"
+# ----------------------------------------------------------
+echo -e "${NOTE}Setting locale...${RESET}"
 sudo sed -i '/^#en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 sudo locale-gen
 sudo localectl set-locale LANG=en_US.UTF-8
 
-# ===========================
-# Set up terminal environment
-# ===========================
-echo -e "${BLUE}==> Setting up terminal environment...${NC}"
-if [[ -f ~/dotfiles/terminal.sh ]]; then
-    bash ~/dotfiles/terminal.sh
-    echo -e "${GREEN}==> Terminal setup completed.${NC}"
-else
-    echo -e "${RED}Error: terminal.sh not found in dotfiles directory.${NC}"
-    exit 1
-fi
+# FIXME: Để sau
+# # ----------------------------------------------------------
+# # Set up terminal environment
+# # ----------------------------------------------------------
+# echo -e "${NOTE}==> Setting up terminal environment...${RESET}"
+# if [[ -f $SCRIPT_DIR/terminal.sh ]]; then
+#     bash $SCRIPT_DIR/terminal.sh
+#     echo -e "${OK}==> Terminal setup completed.${RESET}"
+# else
+#     echo -e "${ERROR}Error: terminal.sh not found in dotfiles directory.${RESET}"
+#     exit 1
+# fi
 
-# ===========================
+# ----------------------------------------------------------
 # Create Github directory
-# ===========================
-echo -e "${BLUE}Creating Github directory...${NC}"
+# ----------------------------------------------------------
+echo -e "${NOTE}Creating Github directory...${RESET}"
 if [ ! -d ~/Github ]; then
     mkdir ~/Github
-    echo -e "${GREEN}Github directory created${NC}"
+    echo -e "${OK}Github directory created${RESET}"
 fi
 
-# ===========================
-# Copy dotfiles to home directory
-# ===========================
-echo -e "${BLUE}Copying dotfiles to home directory...${NC}"
-cd ~
+# ----------------------------------------------------------
+# Completed
+# ----------------------------------------------------------
 
-# ===========================
-# Backup existing dotfiles that might conflict
-# ===========================
-echo -e "${YELLOW}Backing up existing dotfiles that might conflict...${NC}"
-BACKUP_DIR="$HOME/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
-mkdir -p "$BACKUP_DIR"
-
-# ===========================
-# List of files/directories that will be stowed
-# ===========================
-DOTFILES_TO_CHECK=(
-    ".gitconfig"
-    ".zshrc"
-    ".zsh_aliases"
-)
-
-for file in "${DOTFILES_TO_CHECK[@]}"; do
-    if [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
-        echo -e "${YELLOW}Backing up existing $file to $BACKUP_DIR/${NC}"
-        mv "$HOME/$file" "$BACKUP_DIR/"
-    elif [ -L "$HOME/$file" ]; then
-        echo -e "${BLUE}Removing existing symlink $file${NC}"
-        rm "$HOME/$file"
-    fi
-done
-
-cd ~/dotfiles
-
-# ===========================
-# Link modules
-# ===========================
-for module in "${MODULES[@]}"; do
-    echo "Linking $module..."
-    stow -R "$module"
-done
-
-echo -e "${GREEN}Dotfiles backup saved to: $BACKUP_DIR${NC}"
-
-# ===========================
-# Generate SSH key
-# ===========================
-echo -e "${BLUE}==> Generating SSH key...${NC}"
-
-SSH_KEY="$HOME/.ssh/id_ed25519"
-if [ ! -f "$SSH_KEY" ]; then
-    mkdir -p "$HOME/.ssh"
-    ssh-keygen -t ed25519 -C "phamhuulocforwork@gmail.com" -f "$SSH_KEY" -N ""
-    echo -e "${GREEN}SSH key generated at $SSH_KEY${NC}"
-else
-    echo -e "${YELLOW}SSH key already exists at $SSH_KEY${NC}"
-fi
-
-# ===========================
-# Copy SSH public key to clipboard (requires xclip or wl-clipboard)
-# ===========================
-if command -v wl-copy &>/dev/null; then
-    cat "$SSH_KEY.pub" | wl-copy
-    echo -e "${GREEN}SSH public key copied to clipboard (Wayland)${NC}"
-elif command -v xclip &>/dev/null; then
-    cat "$SSH_KEY.pub" | xclip -selection clipboard
-    echo -e "${GREEN}SSH public key copied to clipboard (X11)${NC}"
-else
-    echo -e "${YELLOW}Neither wl-copy nor xclip found. Please install one to copy SSH key to clipboard.${NC}"
-    echo -e "${YELLOW}You can still get your key with: cat $SSH_KEY.pub${NC}"
-fi
-
-echo
-echo "*********************************************************************"
-echo "*                    Hyprland setup is complete!                    *"
-echo "*                                                                   *"
-echo "*   It is recommended to REBOOT your system to apply all changes.   *"
-echo "*                                                                   *"
-echo "*                 Have a great time with Hyprland!!                 *"
-echo "*********************************************************************"
-echo
+echo ":: Installation complete."
+echo ":: Ready to install the dotfiles with the Dotfiles Installer."
