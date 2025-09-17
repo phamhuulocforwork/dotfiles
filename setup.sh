@@ -127,22 +127,6 @@ echo -e "${CYAN}     ╚══════╝╚══════╝   ╚═�
 echo -e "\n"
 
 # ----------------------------------------------------------
-# Ask for sudo once, keep it alive
-# ----------------------------------------------------------
-echo "${NOTE} Asking for sudo password^^...${RESET}"
-sudo -v
-
-keep_sudo_alive() {
-  while true; do
-    sudo -n true
-    sleep 30
-  done
-}
-keep_sudo_alive &
-SUDO_KEEP_ALIVE_PID=$!
-trap 'kill $SUDO_KEEP_ALIVE_PID' EXIT
-
-# ----------------------------------------------------------
 # Update system packages
 # ----------------------------------------------------------
 cd ~
