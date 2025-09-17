@@ -11,7 +11,7 @@ cp -r ./.config/kitty/ $HOME/.config/
 cp -r ./.config/rofi/ $HOME/.config/
 cp -r ./.config/waybar/ $HOME/.config/
 cp -r ./.config/wlogout/ $HOME/.config/
-cp -r ./.zshrc $HOME/
-cp -r ./.zsh_aliases $HOME/
-cp -r ./.p10k.zsh $HOME/
-cp -r ./.gitconfig $HOME/
+cp -r ./.config/zsh/zsh_aliases $HOME/
+cp -r ./.config/zsh/zshrc $HOME/
+cp -r ./.config/zsh/p10k.zsh $HOME/
+cp -r ./.config/git/gitconfig $HOME/
