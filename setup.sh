@@ -27,33 +27,27 @@ MAGENTA="$(tput setaf 5)"
 # Packages
 # ----------------------------------------------------------
 packages=(
+    "dunst"
+    "eww"
+    "hyprland"
+    "kitty"
     "wget"
+    "nvim"
+    "ranger"
+    "rofi-wayland"
+    "waybar"
+    "wofi"
     "unzip"
     "git"
     "gum"    
-    "hyprland"
-    "waybar"
     "rofi-wayland"
-    "kitty"
-    "dunst"
     "thunar"
-    "xdg-desktop-portal-hyprland"
-    "qt5-wayland"
-    "qt6-wayland"
-    "hyprpaper"
-    "hyprlock"
     "firefox"
     "ttf-font-awesome"
-    "vim"
     "fastfetch"
     "ttf-fira-sans" 
     "ttf-fira-code" 
     "ttf-firacode-nerd"
-    "jq"
-    "brightnessctl"
-    "networkmanager"
-    "wireplumber"
-    "wlogout"
     "flatpak"
 )
 
@@ -171,6 +165,9 @@ echo -e "${NOTE}Setting locale...${RESET}"
 sudo sed -i '/^#en_US.UTF-8 UTF-8/s/^#//' /etc/locale.gen
 sudo locale-gen
 sudo localectl set-locale LANG=en_US.UTF-8
+
+chmod +x $HOME/dotfiles/copy-configs.sh
+chmod +x $HOME/dotfiles/terminal.sh
 
 # ----------------------------------------------------------
 # Set up terminal environment
