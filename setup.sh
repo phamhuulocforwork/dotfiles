@@ -165,11 +165,6 @@ fi
 _installPackages "${packages[@]}"
 
 # ----------------------------------------------------------
-# Define script directory
-# ----------------------------------------------------------
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# ----------------------------------------------------------
 # Set locale
 # ----------------------------------------------------------
 echo -e "${NOTE}Setting locale...${RESET}"
@@ -178,29 +173,28 @@ sudo locale-gen
 sudo localectl set-locale LANG=en_US.UTF-8
 
 # ----------------------------------------------------------
+# Set up terminal environment
+# ----------------------------------------------------------
+echo -e "${NOTE}==> Setting up terminal environment...${RESET}"
+if [[ -f $SCRIPT_DIR/terminal.sh ]]; then
+    bash $SCRIPT_DIR/terminal.sh
+    echo -e "${OK}==> Terminal setup completed.${RESET}"
+else
+    echo -e "${ERROR}Error: terminal.sh not found in dotfiles directory.${RESET}"
+    exit 1
+fi
+
+# ----------------------------------------------------------
 # Copy configs
 # ----------------------------------------------------------
 echo -e "${NOTE}==> Copying configs...${RESET}"
-if [[ -f $HOME/dofiles/copy-configs.sh ]]; then
-    bash $HOME/dofiles/copy-configs.sh
+if [[ -f $HOME/dotfiles/copy-configs.sh ]]; then
+    bash $HOME/dotfiles/copy-configs.sh
     echo -e "${OK}==> Copying configs completed.${RESET}"
 else
     echo -e "${ERROR}Error: copy-configs.sh not found in dotfiles directory.${RESET}"
     exit 1
 fi
-
-# FIXME: Để sau
-# # ----------------------------------------------------------
-# # Set up terminal environment
-# # ----------------------------------------------------------
-# echo -e "${NOTE}==> Setting up terminal environment...${RESET}"
-# if [[ -f $SCRIPT_DIR/terminal.sh ]]; then
-#     bash $SCRIPT_DIR/terminal.sh
-#     echo -e "${OK}==> Terminal setup completed.${RESET}"
-# else
-#     echo -e "${ERROR}Error: terminal.sh not found in dotfiles directory.${RESET}"
-#     exit 1
-# fi
 
 # ----------------------------------------------------------
 # Create Github directory
