@@ -1,13 +1,17 @@
 #!/bin/sh
 
-cp -r -l $HOME/.config/alacritty/ ./.config
-cp -r -l $HOME/.config/dunst/ ./.config
-cp -r -l $HOME/.config/hypr/ ./.config
-cp -r -l $HOME/.config/kitty/ ./.config
-cp -r -l $HOME/.config/rofi/ ./.config
-cp -r -l $HOME/.config/waybar/ ./.config
-cp -r -l $HOME/.config/wlogout/ ./.config
-cp -r -l $HOME/.zshrc ./zsh
-cp -r -l $HOME/.zsh_aliases ./zsh
-cp -r -l $HOME/.p10k.zsh ./zsh
-cp -r -l $HOME/.gitconfig ./
+# Tạo thư mục .config nếu chưa có
+mkdir -p ./.config
+
+# Copy các config files, đè lên file cũ nếu có
+cp -r $HOME/.config/alacritty/ ./.config/
+cp -r $HOME/.config/dunst/ ./.config/
+cp -r $HOME/.config/hypr/ ./.config/
+cp -r $HOME/.config/kitty/ ./.config/
+cp -r $HOME/.config/rofi/ ./.config/
+cp -r $HOME/.config/waybar/ ./.config/
+cp -r $HOME/.config/wlogout/ ./.config/
+cp $HOME/.zshrc ./
+cp $HOME/.zsh_aliases ./
+cp $HOME/.p10k.zsh ./
+cp $HOME/.gitconfig ./
