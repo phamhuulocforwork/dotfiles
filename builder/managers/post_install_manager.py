@@ -49,11 +49,19 @@ class PostInstallation:
 
             # Add Docker's official GPG key
             subprocess.run(["sudo", "mkdir", "-p", "/etc/apt/keyrings"], check=True)
-            subprocess.run(["curl", "-fsSL", "https://download.docker.com/linux/ubuntu/gpg"], capture_output=True, text=True)
-            subprocess.run(["sudo", "gpg", "--dearmor", "-o", "/etc/apt/keyrings/docker.gpg"], input=subprocess.run(["curl", "-fsSL", "https://download.docker.com/linux/ubuntu/gpg"], capture_output=True, text=True).stdout, check=True)
+
+            # Download and add Docker GPG key properly
+            gpg_key = subprocess.run(["curl", "-fsSL", "https://download.docker.com/linux/ubuntu/gpg"], capture_output=True)
+            with open("/tmp/docker.gpg", "wb") as f:
+                f.write(gpg_key.stdout)
+            subprocess.run(["sudo", "gpg", "--dearmor", "-o", "/etc/apt/keyrings/docker.gpg", "/tmp/docker.gpg"], check=True)
+            subprocess.run(["rm", "/tmp/docker.gpg"], check=False)
 
             # Add Docker repository
-            subprocess.run(["echo", "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable", "|", "sudo", "tee", "/etc/apt/sources.list.d/docker.list", ">", "/dev/null"], shell=True, check=True)
+            arch = subprocess.run(["dpkg", "--print-architecture"], capture_output=True, text=True).stdout.strip()
+            ubuntu_codename = subprocess.run(["lsb_release", "-cs"], capture_output=True, text=True).stdout.strip()
+            docker_repo = f"deb [arch={arch} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {ubuntu_codename} stable"
+            subprocess.run(["sudo", "tee", "/etc/apt/sources.list.d/docker.list"], input=docker_repo, text=True, check=True)
             subprocess.run(["sudo", "apt", "update"], check=True)
 
             # Install Docker packages
@@ -75,12 +83,21 @@ class PostInstallation:
             # Install nvm
             nvm_dir = os.path.expanduser("~/.nvm")
             if not os.path.exists(nvm_dir):
-                subprocess.run(["curl", "-o-", "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh"], shell=True, check=True)
+                # Download nvm installation script
+                nvm_script = subprocess.run(["curl", "-o-", "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh"], capture_output=True, text=True)
 
-                # Source nvm script
-                nvm_script = os.path.expanduser("~/.nvm/nvm.sh")
-                if os.path.exists(nvm_script):
-                    subprocess.run([f"source {nvm_script} && nvm install --lts && nvm use --lts && nvm alias default lts/*"], shell=True, check=True)
+                # Save and run the script
+                with open("/tmp/nvm_install.sh", "w") as f:
+                    f.write(nvm_script.stdout)
+                subprocess.run(["bash", "/tmp/nvm_install.sh"], check=True)
+                subprocess.run(["rm", "/tmp/nvm_install.sh"], check=False)
+
+                # Source nvm and install Node.js
+                nvm_script_path = os.path.expanduser("~/.nvm/nvm.sh")
+                if os.path.exists(nvm_script_path):
+                    # Use bash to source nvm and install Node.js
+                    install_nodejs_cmd = f"source {nvm_script_path} && nvm install --lts && nvm use --lts && nvm alias default lts/*"
+                    subprocess.run(["bash", "-c", install_nodejs_cmd], check=True)
                     logger.success("nvm and Node.js LTS installed successfully!")
             else:
                 logger.info("nvm already installed")
@@ -92,12 +109,14 @@ class PostInstallation:
         logger.info("Installing Homebrew...")
 
         try:
-            # Install Homebrew
-            brew_script = subprocess.run(["/bin/bash", "-c", "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"], capture_output=True, text=True)
-            if brew_script.returncode == 0:
-                logger.success("Homebrew installed successfully!")
-            else:
-                logger.warning("Homebrew installation may have issues, but continuing...")
+            # Download and install Homebrew
+            brew_install_cmd = subprocess.run(["curl", "-fsSL", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"], capture_output=True)
+            with open("/tmp/brew_install.sh", "wb") as f:
+                f.write(brew_install_cmd.stdout)
+            subprocess.run(["/bin/bash", "/tmp/brew_install.sh"], check=True)
+            subprocess.run(["rm", "/tmp/brew_install.sh"], check=False)
+
+            logger.success("Homebrew installed successfully!")
         except Exception:
             logger.error(f"Error installing Homebrew: {traceback.format_exc()}")
 
@@ -107,8 +126,11 @@ class PostInstallation:
 
         try:
             # Install uv
-            uv_script = subprocess.run(["curl", "-LsSf", "https://astral.sh/uv/install.sh"], capture_output=True, text=True)
-            subprocess.run(["sh"], input=uv_script.stdout, check=True)
+            uv_script = subprocess.run(["curl", "-LsSf", "https://astral.sh/uv/install.sh"], capture_output=True)
+            with open("/tmp/uv_install.sh", "wb") as f:
+                f.write(uv_script.stdout)
+            subprocess.run(["bash", "/tmp/uv_install.sh"], check=True)
+            subprocess.run(["rm", "/tmp/uv_install.sh"], check=False)
 
             # Add uv to PATH
             cargo_bin = os.path.expanduser("~/.cargo/bin")
@@ -153,8 +175,8 @@ class PostInstallation:
             os.makedirs(bin_dir, exist_ok=True)
 
             # Download and install Oh My Posh to user bin directory
-            install_script = subprocess.run(["curl", "-s", "https://ohmyposh.dev/install.sh"], capture_output=True, text=True, check=True)
-            with open("/tmp/ohmyposh_install.sh", "w") as f:
+            install_script = subprocess.run(["curl", "-s", "https://ohmyposh.dev/install.sh"], capture_output=True)
+            with open("/tmp/ohmyposh_install.sh", "wb") as f:
                 f.write(install_script.stdout)
             subprocess.run(["bash", "/tmp/ohmyposh_install.sh"], check=True, cwd=home)
             subprocess.run(["rm", "/tmp/ohmyposh_install.sh"], check=False)
