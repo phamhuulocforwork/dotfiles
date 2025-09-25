@@ -38,57 +38,8 @@ class PostInstallation:
             config_dir = os.path.expanduser("~/.config/fastfetch")
             os.makedirs(config_dir, exist_ok=True)
 
-            # Basic fastfetch config
-            config_content = '''{
-  "logo": {
-    "type": "small"
-  },
-  "display": {
-    "separator": " "
-  },
-  "modules": [
-    "title",
-    "separator",
-    "os",
-    "host",
-    "kernel",
-    "uptime",
-    "shell",
-    "display",
-    "de",
-    "wm",
-    "wmtheme",
-    "theme",
-    "icons",
-    "font",
-    "cursor",
-    "terminal",
-    "terminalfont",
-    "cpu",
-    "gpu",
-    "memory",
-    "disk",
-    "locale",
-    "localip",
-    "publicip",
-    "weather",
-    "players",
-    "song",
-    "wifi",
-    "battery",
-    "poweradapter",
-    "separator",
-    "colors"
-  ]
-}'''
-
-            config_file = os.path.join(config_dir, "config.jsonc")
-            with open(config_file, "w") as f:
-                f.write(config_content)
-
-            logger.success("Fastfetch installed and configured successfully!")
-        except Exception:
-            logger.error(f"Error installing Fastfetch: {traceback.format_exc()}")
+            logger.success("Fastfetch installed successfully!")
+            subprocess.run(["fastfetch"], check=True)
 
     @staticmethod
     def _install_docker() -> None:
