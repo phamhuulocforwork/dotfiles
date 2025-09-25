@@ -10,6 +10,10 @@ class PostInstallation:
         logger.info("The post-installation configuration is starting...")
         PostInstallation._install_fastfetch()
         PostInstallation._setup_fish_shell()
+        PostInstallation._install_docker()
+        PostInstallation._install_nvm_nodejs()
+        PostInstallation._install_homebrew()
+        PostInstallation._install_uv()
         PostInstallation._install_oh_my_posh()
         PostInstallation._configure_fastfetch()
         logger.info("The post-installation configuration is complete!")
@@ -34,6 +38,86 @@ class PostInstallation:
             logger.success("Fastfetch installed successfully!")
         except Exception:
             logger.error(f"Error installing Fastfetch: {traceback.format_exc()}")
+
+    @staticmethod
+    def _install_docker() -> None:
+        logger.info("Installing Docker...")
+
+        try:
+            # Install required packages for Docker
+            subprocess.run(["sudo", "apt", "install", "-y", "apt-transport-https", "ca-certificates", "curl", "gnupg", "lsb-release"], check=True)
+
+            # Add Docker's official GPG key
+            subprocess.run(["sudo", "mkdir", "-p", "/etc/apt/keyrings"], check=True)
+            subprocess.run(["curl", "-fsSL", "https://download.docker.com/linux/ubuntu/gpg"], capture_output=True, text=True)
+            subprocess.run(["sudo", "gpg", "--dearmor", "-o", "/etc/apt/keyrings/docker.gpg"], input=subprocess.run(["curl", "-fsSL", "https://download.docker.com/linux/ubuntu/gpg"], capture_output=True, text=True).stdout, check=True)
+
+            # Add Docker repository
+            subprocess.run(["echo", "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable", "|", "sudo", "tee", "/etc/apt/sources.list.d/docker.list", ">", "/dev/null"], shell=True, check=True)
+            subprocess.run(["sudo", "apt", "update"], check=True)
+
+            # Install Docker packages
+            subprocess.run(["sudo", "apt", "install", "-y", "docker-ce", "docker-ce-cli", "containerd.io", "docker-compose-plugin"], check=True)
+
+            # Add user to docker group
+            subprocess.run(["sudo", "usermod", "-aG", "docker", os.getenv("USER")], check=True)
+
+            logger.success("Docker installed successfully!")
+        except Exception:
+            logger.error(f"Error installing Docker: {traceback.format_exc()}")
+
+
+    @staticmethod
+    def _install_nvm_nodejs() -> None:
+        logger.info("Installing nvm and Node.js...")
+
+        try:
+            # Install nvm
+            nvm_dir = os.path.expanduser("~/.nvm")
+            if not os.path.exists(nvm_dir):
+                subprocess.run(["curl", "-o-", "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh"], shell=True, check=True)
+
+                # Source nvm script
+                nvm_script = os.path.expanduser("~/.nvm/nvm.sh")
+                if os.path.exists(nvm_script):
+                    subprocess.run([f"source {nvm_script} && nvm install --lts && nvm use --lts && nvm alias default lts/*"], shell=True, check=True)
+                    logger.success("nvm and Node.js LTS installed successfully!")
+            else:
+                logger.info("nvm already installed")
+        except Exception:
+            logger.error(f"Error installing nvm/Node.js: {traceback.format_exc()}")
+
+    @staticmethod
+    def _install_homebrew() -> None:
+        logger.info("Installing Homebrew...")
+
+        try:
+            # Install Homebrew
+            brew_script = subprocess.run(["/bin/bash", "-c", "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"], capture_output=True, text=True)
+            if brew_script.returncode == 0:
+                logger.success("Homebrew installed successfully!")
+            else:
+                logger.warning("Homebrew installation may have issues, but continuing...")
+        except Exception:
+            logger.error(f"Error installing Homebrew: {traceback.format_exc()}")
+
+    @staticmethod
+    def _install_uv() -> None:
+        logger.info("Installing uv (Python package manager)...")
+
+        try:
+            # Install uv
+            uv_script = subprocess.run(["curl", "-LsSf", "https://astral.sh/uv/install.sh"], capture_output=True, text=True)
+            subprocess.run(["sh"], input=uv_script.stdout, check=True)
+
+            # Add uv to PATH
+            cargo_bin = os.path.expanduser("~/.cargo/bin")
+            if os.path.exists(cargo_bin):
+                subprocess.run(["export", f"PATH={cargo_bin}:$PATH"], shell=True, check=False)
+
+            logger.success("uv installed successfully!")
+        except Exception:
+            logger.error(f"Error installing uv: {traceback.format_exc()}")
 
     @staticmethod
     def _setup_fish_shell() -> None:
@@ -63,12 +147,23 @@ class PostInstallation:
         logger.info("Installing Oh My Posh...")
 
         try:
-            # Download and install Oh My Posh
+            # Create bin directory if it doesn't exist
+            home = os.path.expanduser("~")
+            bin_dir = os.path.join(home, "bin")
+            os.makedirs(bin_dir, exist_ok=True)
+
+            # Download and install Oh My Posh to user bin directory
             install_script = subprocess.run(["curl", "-s", "https://ohmyposh.dev/install.sh"], capture_output=True, text=True, check=True)
             with open("/tmp/ohmyposh_install.sh", "w") as f:
                 f.write(install_script.stdout)
-            subprocess.run(["bash", "/tmp/ohmyposh_install.sh", "-t", "/usr/local/bin"], check=True)
+            subprocess.run(["bash", "/tmp/ohmyposh_install.sh"], check=True, cwd=home)
             subprocess.run(["rm", "/tmp/ohmyposh_install.sh"], check=False)
+
+            # Ensure oh-my-posh is executable and in PATH
+            oh_my_posh_path = os.path.join(bin_dir, "oh-my-posh")
+            if os.path.exists(oh_my_posh_path):
+                subprocess.run(["chmod", "+x", oh_my_posh_path], check=True)
+
             logger.success("Oh My Posh installed successfully!")
         except Exception:
             logger.error(f"Error installing Oh My Posh: {traceback.format_exc()}")

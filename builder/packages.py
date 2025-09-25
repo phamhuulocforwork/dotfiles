@@ -4,7 +4,9 @@ BASE = Packages(
 	apt=DistributionPackages(
 		common=[
 			"git", "curl", "wget", "fish", "neovim", "lsd", "bat", "tree",
-			"python3-dev", "python3-pip", "python3-venv", "fzf", "ripgrep", "fd-find", "jq"
+			"python3-dev", "python3-pip", "python3-venv", "fzf", "ripgrep", "fd-find", "jq",
+			"apt-transport-https", "ca-certificates", "gnupg", "lsb-release", "build-essential",
+			"software-properties-common", "ca-certificates", "curl", "gnupg", "lsb-release"
 		]
 	)
 )

@@ -6,7 +6,11 @@ This repository contains configuration files for setting up a modern terminal en
 
 - **Fish Shell**: A user-friendly shell with auto-suggestions and syntax highlighting
 - **Oh My Posh**: A beautiful and customizable prompt
-- **Fastfetch**: A fast system information fetcher
+- **Fastfetch**: A fast system information fetcher (installed from GitHub releases)
+- **Docker**: Container platform for development
+- **nvm & Node.js**: Node Version Manager with LTS
+- **Homebrew**: Package manager for macOS/Linux
+- **uv**: Fast Python package manager
 - **Modern Tools**: Includes Neovim, Tmux, Lsd, Bat, and other useful terminal tools
 
 ## Quick Start
@@ -23,6 +27,10 @@ This repository contains configuration files for setting up a modern terminal en
 2. **Restart your terminal** or run:
    ```bash
    exec $SHELL
+   ```
+   *Or to use Fish shell:*
+   ```bash
+   fish
    ```
 
 3. **Configure Git** (optional):
@@ -43,6 +51,10 @@ This repository contains configuration files for setting up a modern terminal en
 - **Neovim**: Modern text editor
 - **Tmux**: Terminal multiplexer
 - **Git**: Version control system
+- **Docker**: Container platform
+- **nvm & Node.js**: Node Version Manager with LTS
+- **Homebrew**: Package manager
+- **uv**: Fast Python package manager
 
 ### Enhanced CLI Tools
 - **Lsd**: Modern `ls` replacement with icons
