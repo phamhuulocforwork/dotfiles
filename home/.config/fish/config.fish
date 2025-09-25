@@ -51,11 +51,6 @@ function take
     cd $argv[1]
 end
 
-# Fastfetch greeting
-if command -q fastfetch
-    fastfetch
-end
-
 # Oh My Posh initialization
 if command -q oh-my-posh
     oh-my-posh init fish --config ~/.config/ohmyposh/theme.omp.json | source
