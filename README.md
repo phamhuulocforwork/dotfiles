@@ -2,6 +2,8 @@
 
 This repository contains configuration files for setting up a modern terminal environment in WSL Ubuntu with Fish shell, Oh My Posh, and Fastfetch.
 
+![Thumbnail](./thumbnail.png)
+
 ## Features
 
 - **Fish Shell**: A user-friendly shell with auto-suggestions and syntax highlighting
@@ -15,16 +17,31 @@ This repository contains configuration files for setting up a modern terminal en
 
 ## Quick Start
 
-1. **Run the installation script**:
+1. **Install WSL (if you haven't already):**
+
+   - Open PowerShell as Administrator and run:
+     ```powershell
+     wsl --install
+     ```
+   - Restart your computer if prompted.
+   - After installation, open "Ubuntu" from the Start Menu to complete the setup.
+
+2. **Clone this repository:**
    ```bash
-   bash install.sh
+   git clone https://github.com/phamhuulocforwork/dotfiles.git
+   cd dotfiles
    ```
-   *Or if you don't have bash:*
+
+3. **Run the installation script:**
    ```bash
    sh install.sh
    ```
+   *Or if sh is not available:*
+   ```bash
+   bash install.sh
+   ```
 
-2. **Restart your terminal** or run:
+4. **Restart your terminal** or run:
    ```bash
    exec $SHELL
    ```
@@ -33,7 +50,7 @@ This repository contains configuration files for setting up a modern terminal en
    fish
    ```
 
-3. **Configure Git** (optional):
+5. **Configure Git (optional):**
    Edit `~/.gitconfig` with your name and email:
    ```bash
    git config --global user.name "Your Name"
