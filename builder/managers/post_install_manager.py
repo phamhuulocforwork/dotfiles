@@ -15,7 +15,6 @@ class PostInstallation:
         PostInstallation._install_homebrew()
         PostInstallation._install_uv()
         PostInstallation._install_oh_my_posh()
-        PostInstallation._configure_fastfetch()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -189,60 +188,6 @@ class PostInstallation:
             logger.success("Oh My Posh installed successfully!")
         except Exception:
             logger.error(f"Error installing Oh My Posh: {traceback.format_exc()}")
-
-    @staticmethod
-    def _configure_fastfetch() -> None:
-        logger.info("Configuring Fastfetch...")
-
-        # Create fastfetch config directory if it doesn't exist
-        config_dir = os.path.expanduser("~/.config/fastfetch")
-        os.makedirs(config_dir, exist_ok=True)
-
-        # Basic fastfetch config
-        config_content = '''
-{
-  "logo": {
-    "type": "small"
-  },
-  "display": {
-    "separator": " "
-  },
-  "modules": [
-    "title",
-    "separator",
-    "os",
-    "host",
-    "kernel",
-    "uptime",
-    "shell",
-    "display",
-    "de",
-    "wm",
-    "wmtheme",
-    "theme",
-    "icons",
-    "font",
-    "cursor",
-    "terminal",
-    "terminalfont",
-    "cpu",
-    "gpu",
-    "memory",
-    "disk",
-    "locale",
-    "localip",
-    "publicip",
-    "weather",
-    "players",
-    "song",
-    "wifi",
-    "battery",
-    "poweradapter",
-    "separator",
-    "colors"
-  ]
-}
-'''
 
         config_file = os.path.join(config_dir, "config.jsonc")
         try:
