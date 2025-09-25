@@ -61,6 +61,7 @@ This repository contains configuration files for setting up a modern terminal en
 - **Bat**: Enhanced `cat` with syntax highlighting
 - **Btop**: Modern system monitor
 - **Tree**: Directory tree viewer
+- **Unzip**: Archive extraction utility
 - **Fzf**: Fuzzy finder
 - **Ripgrep**: Fast text search
 - **Fd**: Modern `find` replacement
@@ -68,6 +69,7 @@ This repository contains configuration files for setting up a modern terminal en
 ### Additional Tools
 - **Jq**: JSON processor
 - **P7zip**: Archive utilities
+- **Unzip**: Archive extraction utility
 - **Openssh-client**: SSH client
 - **Build-essential**: C/C++ development tools
 

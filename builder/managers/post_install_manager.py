@@ -34,7 +34,59 @@ class PostInstallation:
             # Clean up
             subprocess.run(["rm", "-rf", "/tmp/fastfetch.tar.gz", "/tmp/fastfetch-linux-amd64"], check=True)
 
-            logger.success("Fastfetch installed successfully!")
+            # Configure fastfetch
+            config_dir = os.path.expanduser("~/.config/fastfetch")
+            os.makedirs(config_dir, exist_ok=True)
+
+            # Basic fastfetch config
+            config_content = '''{
+  "logo": {
+    "type": "small"
+  },
+  "display": {
+    "separator": " "
+  },
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "host",
+    "kernel",
+    "uptime",
+    "shell",
+    "display",
+    "de",
+    "wm",
+    "wmtheme",
+    "theme",
+    "icons",
+    "font",
+    "cursor",
+    "terminal",
+    "terminalfont",
+    "cpu",
+    "gpu",
+    "memory",
+    "disk",
+    "locale",
+    "localip",
+    "publicip",
+    "weather",
+    "players",
+    "song",
+    "wifi",
+    "battery",
+    "poweradapter",
+    "separator",
+    "colors"
+  ]
+}'''
+
+            config_file = os.path.join(config_dir, "config.jsonc")
+            with open(config_file, "w") as f:
+                f.write(config_content)
+
+            logger.success("Fastfetch installed and configured successfully!")
         except Exception:
             logger.error(f"Error installing Fastfetch: {traceback.format_exc()}")
 
@@ -188,11 +240,3 @@ class PostInstallation:
             logger.success("Oh My Posh installed successfully!")
         except Exception:
             logger.error(f"Error installing Oh My Posh: {traceback.format_exc()}")
-
-        config_file = os.path.join(config_dir, "config.jsonc")
-        try:
-            with open(config_file, "w") as f:
-                f.write(config_content)
-            logger.success("Fastfetch configured successfully!")
-        except Exception:
-            logger.error(f"Error configuring Fastfetch: {traceback.format_exc()}")
