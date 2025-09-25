@@ -8,10 +8,32 @@ class PostInstallation:
     @staticmethod
     def apply():
         logger.info("The post-installation configuration is starting...")
+        PostInstallation._install_fastfetch()
         PostInstallation._setup_fish_shell()
         PostInstallation._install_oh_my_posh()
         PostInstallation._configure_fastfetch()
         logger.info("The post-installation configuration is complete!")
+
+    @staticmethod
+    def _install_fastfetch() -> None:
+        logger.info("Installing Fastfetch...")
+
+        try:
+            # Download and install fastfetch binary
+            fastfetch_url = "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.tar.gz"
+            subprocess.run(["curl", "-L", "-o", "/tmp/fastfetch.tar.gz", fastfetch_url], check=True)
+
+            # Extract and install
+            subprocess.run(["tar", "-xzf", "/tmp/fastfetch.tar.gz", "-C", "/tmp"], check=True)
+            subprocess.run(["sudo", "cp", "/tmp/fastfetch-linux-amd64/usr/bin/fastfetch", "/usr/local/bin/"], check=True)
+            subprocess.run(["sudo", "chmod", "+x", "/usr/local/bin/fastfetch"], check=True)
+
+            # Clean up
+            subprocess.run(["rm", "-rf", "/tmp/fastfetch.tar.gz", "/tmp/fastfetch-linux-amd64"], check=True)
+
+            logger.success("Fastfetch installed successfully!")
+        except Exception:
+            logger.error(f"Error installing Fastfetch: {traceback.format_exc()}")
 
     @staticmethod
     def _setup_fish_shell() -> None:

@@ -36,7 +36,7 @@ This repository contains configuration files for setting up a modern terminal en
 
 ### Core Terminal Tools
 - **Fish**: Modern shell with auto-suggestions
-- **Fastfetch**: System information display
+- **Fastfetch**: System information display (installed from GitHub releases)
 - **Oh My Posh**: Beautiful prompt
 
 ### Development Tools
