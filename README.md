@@ -1,99 +1,125 @@
-# Dotfiles Configuration with WSL, Zsh & Oh My Zsh
+# WSL Ubuntu Terminal Setup
 
-![Thumbnail](./thumbnail.png)
+This repository contains configuration files for setting up a modern terminal environment in WSL Ubuntu with Fish shell, Oh My Posh, and Fastfetch.
 
-## Complete Installation and Configuration Guide
+## Features
 
-### 📋 System Requirements
+- **Fish Shell**: A user-friendly shell with auto-suggestions and syntax highlighting
+- **Oh My Posh**: A beautiful and customizable prompt
+- **Fastfetch**: A fast system information fetcher
+- **Modern Tools**: Includes Neovim, Tmux, Lsd, Bat, and other useful terminal tools
 
-- Windows 10 version 2004 and higher or Windows 11
-- PowerShell with Administrator privileges
+## Quick Start
 
-### 🚀 Step 1: Install WSL (Windows Subsystem for Linux)
+1. **Run the installation script**:
+   ```bash
+   sh install.sh
+   ```
 
-```powershell
-# Enable WSL feature
-wsl --install
+2. **Restart your terminal** or run:
+   ```bash
+   exec $SHELL
+   ```
 
-# Or install Ubuntu specifically
-wsl --install -d Ubuntu
-```
+3. **Configure Git** (optional):
+   Edit `~/.gitconfig` with your name and email:
+   ```bash
+   git config --global user.name "Your Name"
+   git config --global user.email "your.email@example.com"
+   ```
 
-**Restart your computer** after installation completes.
+## Installed Packages
 
-### 🐧 Step 2: Setup WSL Ubuntu
+### Core Terminal Tools
+- **Fish**: Modern shell with auto-suggestions
+- **Fastfetch**: System information display
+- **Oh My Posh**: Beautiful prompt
 
-Open WSL Ubuntu and create user account when prompted.
+### Development Tools
+- **Neovim**: Modern text editor
+- **Tmux**: Terminal multiplexer
+- **Git**: Version control system
 
-### 📁 Step 3: Clone and Apply Dotfiles
+### Enhanced CLI Tools
+- **Lsd**: Modern `ls` replacement with icons
+- **Bat**: Enhanced `cat` with syntax highlighting
+- **Btop**: Modern system monitor
+- **Tree**: Directory tree viewer
+- **Fzf**: Fuzzy finder
+- **Ripgrep**: Fast text search
+- **Fd**: Modern `find` replacement
 
+### Additional Tools
+- **Jq**: JSON processor
+- **P7zip**: Archive utilities
+- **Openssh-client**: SSH client
+- **Build-essential**: C/C++ development tools
+
+## Configuration Files
+
+- `~/.config/fish/config.fish`: Fish shell configuration
+- `~/.config/ohmyposh/theme.omp.json`: Oh My Posh theme
+- `~/.bashrc`: Bash fallback configuration
+- `~/.gitconfig`: Git configuration
+
+## Customization
+
+### Fish Shell
+Edit `~/.config/fish/config.fish` to customize your Fish shell experience.
+
+### Oh My Posh
+Edit `~/.config/ohmyposh/theme.omp.json` to customize your prompt theme. You can find more themes at [ohmyposh.dev](https://ohmyposh.dev/docs/themes).
+
+### Fastfetch
+Edit `~/.config/fastfetch/config.jsonc` to customize the system information display.
+
+## Troubleshooting
+
+### Fish Shell Not Working
+If Fish shell doesn't start automatically, run:
 ```bash
-# Clone dotfiles repository
-cd ~
-git clone https://github.com/phamhuulocforwork/dotfiles.git
-
-# Navigate to dotfiles directory
-cd dotfiles
-
-# Apply configuration (optional - for additional config files)
-chmod +x config.sh
-./config.sh
-
-# Run automated setup script (this will handle everything!)
-chmod +x setup.sh
-./setup.sh
+chsh -s /usr/bin/fish
 ```
 
-**The setup script will automatically handle:**
-
-- System updates and essential package installation
-- Zsh installation and verification
-- Oh My Zsh installation
-- nvm (Node Version Manager) and Node.js LTS installation
-- Plugin installation (zsh-autosuggestions, zsh-syntax-highlighting)
-- Catppuccin theme setup
-- SSH key configuration (if available)
-- Zsh configuration application
-- Setting Zsh as default shell
-
-### 🎨 Step 4: Finalize Installation
-
+### Oh My Posh Not Working
+Make sure Oh My Posh is installed and the configuration file exists:
 ```bash
-# Restart terminal or reload configuration
-source ~/.zshrc
-
-# Verify theme is applied
-echo $ZSH_THEME
+oh-my-posh --version
 ```
 
-### 🛠️ Installed Features
-
-- **Theme**: Catppuccin Mocha with beautiful colors
-- **Plugins**:
-  - `zsh-autosuggestions` - Automatic command suggestions
-  - `zsh-syntax-highlighting` - Syntax highlighting with Catppuccin theme
-  - `git`, `docker`, `npm`, `node`, `yarn`, `vscode`, `github`
-- **Aliases**: Useful shortcuts for development
-- **Functions**: `mkcd`, `gitinit`, `clone` functions
-
----
-
-## 📂 Repository Structure
-
-```txt
-dotfiles/
-├── .zshrc                   # Main Zsh configuration
-├── .zsh_aliases             # Custom aliases
-├── .gitconfig               # Git configuration
-├── setup.sh                 # Automated setup script
-├── config.sh                # Dotfiles deployment script
-└── README.md                # This file
+### Fastfetch Not Working
+Check if fastfetch is installed and configured:
+```bash
+fastfetch --version
 ```
 
-## 🤝 Contributing
+## Project Structure
 
-Feel free to fork this repository and customize the dotfiles according to your needs!
+```
+├── install.sh                    # Main installation script
+├── README.md                     # This file
+├── builder/                      # Python builder scripts
+│   ├── install.py               # Main builder logic
+│   ├── packages.py              # Package definitions
+│   ├── managers/                 # Manager modules
+│   │   ├── filesystem_manager.py
+│   │   ├── package_manager.py
+│   │   └── post_install_manager.py
+│   └── utils/
+│       └── schemes.py           # Data structures
+└── home/                        # Configuration files
+    ├── .bashrc
+    ├── .gitconfig
+    └── .config/
+        ├── fish/                # Fish shell config
+        ├── ohmyposh/            # Oh My Posh theme
+        └── fastfetch/           # Fastfetch config
+```
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
