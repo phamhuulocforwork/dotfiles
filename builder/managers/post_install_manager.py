@@ -48,6 +48,11 @@ class PostInstallation:
 
         # Install Fisher (Fish plugin manager)
         try:
+            # First, remove any existing fisher files to avoid conflicts
+            subprocess.run(["rm", "-f", "/home/huuloc/.config/fish/functions/fisher.fish"], check=False)
+            subprocess.run(["rm", "-f", "/home/huuloc/.config/fish/completions/fisher.fish"], check=False)
+
+            # Install Fisher
             subprocess.run(["fish", "-c", "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher"], check=True)
             logger.success("Fisher installed successfully!")
         except Exception:
@@ -59,8 +64,11 @@ class PostInstallation:
 
         try:
             # Download and install Oh My Posh
-            subprocess.run(["curl", "-s", "https://ohmyposh.dev/install.sh"], capture_output=True, text=True, check=True)
-            subprocess.run(["bash", "-s", "--", "-t", "/usr/local/bin"], check=True)
+            install_script = subprocess.run(["curl", "-s", "https://ohmyposh.dev/install.sh"], capture_output=True, text=True, check=True)
+            with open("/tmp/ohmyposh_install.sh", "w") as f:
+                f.write(install_script.stdout)
+            subprocess.run(["bash", "/tmp/ohmyposh_install.sh", "-t", "/usr/local/bin"], check=True)
+            subprocess.run(["rm", "/tmp/ohmyposh_install.sh"], check=False)
             logger.success("Oh My Posh installed successfully!")
         except Exception:
             logger.error(f"Error installing Oh My Posh: {traceback.format_exc()}")
