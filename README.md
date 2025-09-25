@@ -13,6 +13,10 @@ This repository contains configuration files for setting up a modern terminal en
 
 1. **Run the installation script**:
    ```bash
+   bash install.sh
+   ```
+   *Or if you don't have bash:*
+   ```bash
    sh install.sh
    ```
 
