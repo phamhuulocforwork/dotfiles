@@ -32,20 +32,13 @@ class FileSystemManager:
         logger.success("Starting the process of copying dotfiles")
         home = Path.home()
 
-        ##==> Copying dotfiles
-        ##############################################
-
-        # Copy config files
         if os.path.exists("./home/.config"):
-            # Copy config directory, but skip empty directories that might cause conflicts
             for item in os.listdir("./home/.config"):
                 src_path = Path("./home/.config") / item
                 dst_path = home / ".config" / item
                 if src_path.is_file():
-                    # Copy individual files
                     shutil.copy2(src_path, dst_path)
                 elif src_path.is_dir() and os.listdir(src_path):
-                    # Only copy non-empty directories
                     shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
 
         if os.path.exists("./home/bin"):

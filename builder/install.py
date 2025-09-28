@@ -13,16 +13,12 @@ class Builder:
             "The program has been launched successfully. Starting WSL Ubuntu terminal setup."
         )
 
-        # Create default folders
         FileSystemManager.create_default_folders()
 
-        # Install packages
         self.packages_installation()
 
-        # Post installation setup (before copying dotfiles)
         PostInstallation.apply()
 
-        # Copy dotfiles
         FileSystemManager.copy_dotfiles()
 
         logger.success("WSL Ubuntu terminal setup is complete!")
