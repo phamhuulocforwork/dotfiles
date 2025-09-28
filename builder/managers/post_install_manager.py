@@ -23,14 +23,33 @@ class PostInstallation:
         logger.info("Installing Fastfetch...")
 
         try:
-            # Download and install fastfetch binary
+            # Download and install fastfetch binary to user directory
             fastfetch_url = "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.tar.gz"
             subprocess.run(["curl", "-L", "-o", "/tmp/fastfetch.tar.gz", fastfetch_url], check=True)
 
-            # Extract and install
+            # Extract and install to user bin directory
             subprocess.run(["tar", "-xzf", "/tmp/fastfetch.tar.gz", "-C", "/tmp"], check=True)
-            subprocess.run(["sudo", "cp", "/tmp/fastfetch-linux-amd64/usr/bin/fastfetch", "/usr/local/bin/"], check=True)
-            subprocess.run(["sudo", "chmod", "+x", "/usr/local/bin/fastfetch"], check=True)
+
+            # Create user bin directory if it doesn't exist
+            user_bin_dir = os.path.expanduser("~/.local/bin")
+            os.makedirs(user_bin_dir, exist_ok=True)
+
+            # Copy fastfetch to user bin directory
+            subprocess.run(["cp", "/tmp/fastfetch-linux-amd64/usr/bin/fastfetch", user_bin_dir], check=True)
+            subprocess.run(["chmod", "+x", os.path.join(user_bin_dir, "fastfetch")], check=True)
+
+            # Add to PATH if not already there
+            bashrc_path = os.path.expanduser("~/.bashrc")
+            zshrc_path = os.path.expanduser("~/.zshrc")
+            path_export = 'export PATH="$HOME/.local/bin:$PATH"'
+
+            for rc_file in [bashrc_path, zshrc_path]:
+                if os.path.exists(rc_file):
+                    with open(rc_file, 'r') as f:
+                        content = f.read()
+                    if path_export not in content:
+                        with open(rc_file, 'a') as f:
+                            f.write(f'\n{path_export}\n')
 
             # Clean up
             subprocess.run(["rm", "-rf", "/tmp/fastfetch.tar.gz", "/tmp/fastfetch-linux-amd64"], check=True)
@@ -40,7 +59,7 @@ class PostInstallation:
             os.makedirs(config_dir, exist_ok=True)
 
             logger.success("Fastfetch installed successfully!")
-            subprocess.run(["fastfetch"], check=True)
+            # Don't run fastfetch here as PATH might not be updated yet
 
         except Exception:
             logger.error(f"Error installing Fastfetch: {traceback.format_exc()}")
@@ -50,35 +69,22 @@ class PostInstallation:
         logger.info("Installing Docker...")
 
         try:
-            # Install required packages for Docker
-            subprocess.run(["sudo", "apt", "install", "-y", "apt-transport-https", "ca-certificates", "curl", "gnupg", "lsb-release"], check=True)
+            # Check if Docker is already installed
+            try:
+                result = subprocess.run(["docker", "--version"], capture_output=True, check=True)
+                logger.info("Docker is already installed")
+                return
+            except subprocess.CalledProcessError:
+                pass  # Docker not installed, continue with installation
 
-            # Add Docker's official GPG key
-            subprocess.run(["sudo", "mkdir", "-p", "/etc/apt/keyrings"], check=True)
+            # For Docker installation, we skip automatic installation as it requires sudo
+            # and complex setup. User should install Docker manually or use Docker Desktop for WSL
+            logger.warning("Docker installation requires sudo privileges and is skipped in automated setup.")
+            logger.warning("Please install Docker manually using Docker Desktop for WSL or run:")
+            logger.warning("curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh")
 
-            # Download and add Docker GPG key properly
-            gpg_key = subprocess.run(["curl", "-fsSL", "https://download.docker.com/linux/ubuntu/gpg"], capture_output=True)
-            with open("/tmp/docker.gpg", "wb") as f:
-                f.write(gpg_key.stdout)
-            subprocess.run(["sudo", "gpg", "--dearmor", "-o", "/etc/apt/keyrings/docker.gpg", "/tmp/docker.gpg"], check=True)
-            subprocess.run(["rm", "/tmp/docker.gpg"], check=False)
-
-            # Add Docker repository
-            arch = subprocess.run(["dpkg", "--print-architecture"], capture_output=True, text=True).stdout.strip()
-            ubuntu_codename = subprocess.run(["lsb_release", "-cs"], capture_output=True, text=True).stdout.strip()
-            docker_repo = f"deb [arch={arch} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {ubuntu_codename} stable"
-            subprocess.run(["sudo", "tee", "/etc/apt/sources.list.d/docker.list"], input=docker_repo, text=True, check=True)
-            subprocess.run(["sudo", "apt", "update"], check=True)
-
-            # Install Docker packages
-            subprocess.run(["sudo", "apt", "install", "-y", "docker-ce", "docker-ce-cli", "containerd.io", "docker-compose-plugin"], check=True)
-
-            # Add user to docker group
-            subprocess.run(["sudo", "usermod", "-aG", "docker", os.getenv("USER")], check=True)
-
-            logger.success("Docker installed successfully!")
         except Exception:
-            logger.error(f"Error installing Docker: {traceback.format_exc()}")
+            logger.error(f"Error checking Docker installation: {traceback.format_exc()}")
 
 
     @staticmethod
@@ -153,8 +159,19 @@ class PostInstallation:
 
         # Change default shell to zsh
         try:
+            # Check if zsh is already the default shell
+            current_shell = os.path.basename(os.environ.get('SHELL', ''))
+            if current_shell == 'zsh':
+                logger.info("Zsh is already the default shell")
+                return
+
+            # Try to change shell without sudo first
             subprocess.run(["chsh", "-s", "/usr/bin/zsh"], check=True)
             logger.success("Default shell changed to zsh!")
+        except subprocess.CalledProcessError:
+            # If chsh fails, inform user to change shell manually
+            logger.warning("Could not change default shell automatically.")
+            logger.warning("Please run 'chsh -s /usr/bin/zsh' manually after setup completes.")
         except Exception:
             logger.error(f"Error changing shell to zsh: {traceback.format_exc()}")
 
@@ -185,7 +202,13 @@ class PostInstallation:
         try:
             # Install Oh My Zsh
             oh_my_zsh_dir = os.path.expanduser("~/.oh-my-zsh")
-            if not os.path.exists(oh_my_zsh_dir):
+            oh_my_zsh_script = os.path.join(oh_my_zsh_dir, "oh-my-zsh.sh")
+
+            if not os.path.exists(oh_my_zsh_script):
+                # Remove incomplete installation if it exists
+                if os.path.exists(oh_my_zsh_dir):
+                    subprocess.run(["rm", "-rf", oh_my_zsh_dir], check=True)
+
                 # Download and install Oh My Zsh using the recommended method
                 install_cmd = 'curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -s -- --unattended'
                 subprocess.run(install_cmd, shell=True, check=True, executable="/bin/bash")

@@ -16,6 +16,20 @@ class PackageManager:
             bool: Status, whether the package is installed or not
         """
 
+        # Check if package is already installed
+        try:
+            result = subprocess.run(
+                ["dpkg", "-l", package],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            if "ii" in result.stdout:
+                logger.info(f'Package "{package}" is already installed')
+                return True
+        except subprocess.CalledProcessError:
+            pass  # Package not installed, continue with installation
+
         for _ in range(error_retries):
             try:
                 subprocess.run(
