@@ -212,6 +212,10 @@ class PostInstallation:
 
                 # Copy theme files
                 if os.path.exists(os.path.join(catppuccin_dir, "catppuccin.zsh-theme")):
+                    # Remove existing symlink if it exists
+                    theme_file = os.path.join(themes_dir, "catppuccin.zsh-theme")
+                    if os.path.islink(theme_file) or os.path.exists(theme_file):
+                        subprocess.run(["rm", "-f", theme_file], check=True)
                     subprocess.run(["cp", os.path.join(catppuccin_dir, "catppuccin.zsh-theme"), themes_dir], check=True)
 
                 if os.listdir(catppuccin_dir):
