@@ -177,12 +177,9 @@ class PostInstallation:
 
         # Install zsh plugins
         try:
-            # Set ZSH_CUSTOM environment variable
-            zsh_custom = os.path.expanduser("~/.oh-my-zsh/custom")
-            os.environ["ZSH_CUSTOM"] = zsh_custom
-
-            # Create zsh plugin directories
-            plugins_dir = os.path.join(zsh_custom, "plugins")
+            # Install plugins to default oh-my-zsh plugins directory
+            zsh_dir = os.path.expanduser("~/.oh-my-zsh")
+            plugins_dir = os.path.join(zsh_dir, "plugins")
             os.makedirs(plugins_dir, exist_ok=True)
 
             logger.info(f"Installing zsh plugins to: {plugins_dir}")

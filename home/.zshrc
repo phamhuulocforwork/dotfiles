@@ -1,5 +1,4 @@
 export ZSH="$HOME/.oh-my-zsh"
-export ZSH_CUSTOM="$ZSH/custom"
 
 ZSH_THEME="catppuccin"
 CATPPUCCIN_FLAVOR="mocha"
