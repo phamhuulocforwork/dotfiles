@@ -1,3 +1,4 @@
+import glob
 import os
 import subprocess
 import traceback
@@ -185,45 +186,28 @@ class PostInstallation:
             # Install Oh My Zsh
             oh_my_zsh_dir = os.path.expanduser("~/.oh-my-zsh")
             if not os.path.exists(oh_my_zsh_dir):
-                # Download and install Oh My Zsh
-                install_script = subprocess.run(["curl", "-fsSL", "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"], capture_output=True)
-                with open("/tmp/ohmyzsh_install.sh", "wb") as f:
-                    f.write(install_script.stdout)
-                # Make the script executable and run it
-                subprocess.run(["chmod", "+x", "/tmp/ohmyzsh_install.sh"], check=True)
-                subprocess.run(["/tmp/ohmyzsh_install.sh", "", "--unattended"], check=True)
-                subprocess.run(["rm", "/tmp/ohmyzsh_install.sh"], check=False)
+                # Download and install Oh My Zsh using the recommended method
+                install_cmd = 'curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -s -- --unattended'
+                subprocess.run(install_cmd, shell=True, check=True, executable="/bin/bash")
 
                 logger.success("Oh My Zsh installed successfully!")
             else:
                 logger.info("Oh My Zsh already installed")
 
-            # Install Catppuccin theme
+            # Install Catppuccin theme for oh-my-zsh
             try:
                 themes_dir = os.path.expanduser("~/.oh-my-zsh/themes")
-                catppuccin_dir = os.path.expanduser("~/catppuccin-zsh")
+                catppuccin_dir = os.path.expanduser("~/catppuccin-oh-my-zsh")
 
                 if not os.path.exists(catppuccin_dir):
-                    subprocess.run(["git", "clone", "https://github.com/JannoTjarks/catppuccin-zsh.git", catppuccin_dir], check=True)
+                    subprocess.run(["git", "clone", "https://github.com/catppuccin/oh-my-zsh.git", catppuccin_dir], check=True)
 
-                # Create catppuccin flavors directory
-                catppuccin_flavors_dir = os.path.join(themes_dir, "catppuccin-flavors")
-                os.makedirs(catppuccin_flavors_dir, exist_ok=True)
-
-                # Copy theme files
-                if os.path.exists(os.path.join(catppuccin_dir, "catppuccin.zsh-theme")):
-                    # Remove existing symlink if it exists
-                    theme_file = os.path.join(themes_dir, "catppuccin.zsh-theme")
-                    if os.path.islink(theme_file) or os.path.exists(theme_file):
-                        subprocess.run(["rm", "-f", theme_file], check=True)
-                    subprocess.run(["cp", os.path.join(catppuccin_dir, "catppuccin.zsh-theme"), themes_dir], check=True)
-
-                if os.listdir(catppuccin_dir):
-                    for item in os.listdir(catppuccin_dir):
-                        src_path = os.path.join(catppuccin_dir, item)
-                        dst_path = os.path.join(catppuccin_flavors_dir, item)
-                        if os.path.isdir(src_path):
-                            subprocess.run(["cp", "-r", src_path, dst_path], check=False)
+                # Copy theme files to oh-my-zsh themes directory
+                theme_files = glob.glob(os.path.join(catppuccin_dir, "themes", "*.zsh-theme"))
+                for theme_file in theme_files:
+                    theme_name = os.path.basename(theme_file)
+                    dest_file = os.path.join(themes_dir, theme_name)
+                    subprocess.run(["cp", theme_file, dest_file], check=True)
 
                 # Clean up
                 subprocess.run(["rm", "-rf", catppuccin_dir], check=False)
