@@ -48,13 +48,14 @@ class FileSystemManager:
                     # Only copy non-empty directories
                     shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
 
-        # Copy bin files
         if os.path.exists("./home/bin"):
             shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
 
-        # Copy shell configurations
-        if os.path.exists("./home/.bashrc"):
-            shutil.copy(src=Path("./home/.bashrc"), dst=home / ".bashrc")
+        if os.path.exists("./home/.zshrc"):
+            shutil.copy(src=Path("./home/.zshrc"), dst=home / ".zshrc")
+
+        if os.path.exists("./home/.zsh_aliases"):
+            shutil.copy(src=Path("./home/.zsh_aliases"), dst=home / ".zsh_aliases")
 
         if os.path.exists("./home/.gitconfig"):
             shutil.copy(src=Path("./home/.gitconfig"), dst=home / ".gitconfig")

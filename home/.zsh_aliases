@@ -1,0 +1,73 @@
+# Windows Development Aliases
+alias github="cd ~/Github"
+
+# Github alias
+alias python="python3"
+
+# Quick Navigation
+alias home="cd ~"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+alias grep='grep --color=auto'
+alias cat='bat'
+alias vim='nvim'
+alias vi='nvim'
+alias nano='nvim'
+
+# File Operations
+alias ll="ls -la"
+alias la="ls -la"
+alias l="ls -l"
+alias cls="clear"
+
+# Git Shortcuts
+alias gs="git status"
+alias ga="git add"
+alias gaa="git add ."
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gp="git push"
+alias gl="git pull"
+alias gco="git checkout"
+alias gb="git branch"
+alias gd="git diff"
+alias glog="git log --oneline --graph --decorate"
+
+# Node.js/NPM Shortcuts
+alias ni="npm install"
+alias ns="npm start"
+alias nt="npm test"
+alias nb="npm run build"
+alias nd="npm run dev"
+alias nrd="npm run dev"
+alias nrs="npm run start"
+alias nrt="npm run test"
+alias nrb="npm run build"
+
+# Yarn Shortcuts
+alias ys="yarn start"
+alias yi="yarn install"
+alias yt="yarn test"
+alias yb="yarn build"
+alias yd="yarn dev"
+
+# System Utils
+alias reload="source ~/.zshrc"
+alias editrc="code ~/.zshrc"
+alias editalias="code ~/.zsh_aliases"
+
+# Docker Shortcuts
+alias dc="docker-compose" 
+alias dcu="docker-compose up"
+alias dcd="docker-compose down"
+alias dcb="docker-compose build"
+alias dps="docker ps"
+alias di="docker images"
+
+# VS Code Shortcuts
+alias code="code ."
+alias cursor="cursor ."
+alias codeh="code ~"
+alias cursorh="cursor ~"

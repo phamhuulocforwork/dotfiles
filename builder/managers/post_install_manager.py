@@ -9,12 +9,12 @@ class PostInstallation:
     def apply():
         logger.info("The post-installation configuration is starting...")
         PostInstallation._install_fastfetch()
-        PostInstallation._setup_fish_shell()
+        PostInstallation._setup_zsh_shell()
         PostInstallation._install_docker()
         PostInstallation._install_nvm_nodejs()
         PostInstallation._install_homebrew()
         PostInstallation._install_uv()
-        PostInstallation._install_oh_my_posh()
+        PostInstallation._install_oh_my_zsh()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -40,6 +40,9 @@ class PostInstallation:
 
             logger.success("Fastfetch installed successfully!")
             subprocess.run(["fastfetch"], check=True)
+
+        except Exception:
+            logger.error(f"Error installing Fastfetch: {traceback.format_exc()}")
 
     @staticmethod
     def _install_docker() -> None:
@@ -144,50 +147,86 @@ class PostInstallation:
             logger.error(f"Error installing uv: {traceback.format_exc()}")
 
     @staticmethod
-    def _setup_fish_shell() -> None:
-        logger.info("Setting up Fish shell...")
+    def _setup_zsh_shell() -> None:
+        logger.info("Setting up Zsh shell...")
 
-        # Change default shell to fish
+        # Change default shell to zsh
         try:
-            subprocess.run(["chsh", "-s", "/usr/bin/fish"], check=True)
-            logger.success("Default shell changed to fish!")
+            subprocess.run(["chsh", "-s", "/usr/bin/zsh"], check=True)
+            logger.success("Default shell changed to zsh!")
         except Exception:
-            logger.error(f"Error changing shell to fish: {traceback.format_exc()}")
+            logger.error(f"Error changing shell to zsh: {traceback.format_exc()}")
 
-        # Install Fisher (Fish plugin manager)
+        # Install zsh plugins
         try:
-            # First, remove any existing fisher files to avoid conflicts
-            subprocess.run(["rm", "-f", "/home/huuloc/.config/fish/functions/fisher.fish"], check=False)
-            subprocess.run(["rm", "-f", "/home/huuloc/.config/fish/completions/fisher.fish"], check=False)
+            # Create zsh plugin directories
+            plugins_dir = os.path.expanduser("~/.oh-my-zsh/custom/plugins")
+            os.makedirs(plugins_dir, exist_ok=True)
 
-            # Install Fisher
-            subprocess.run(["fish", "-c", "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher"], check=True)
-            logger.success("Fisher installed successfully!")
+            # Install zsh-autosuggestions
+            autosuggestions_dir = os.path.join(plugins_dir, "zsh-autosuggestions")
+            if not os.path.exists(autosuggestions_dir):
+                subprocess.run(["git", "clone", "https://github.com/zsh-users/zsh-autosuggestions.git", autosuggestions_dir], check=True)
+
+            # Install zsh-syntax-highlighting
+            syntax_highlighting_dir = os.path.join(plugins_dir, "zsh-syntax-highlighting")
+            if not os.path.exists(syntax_highlighting_dir):
+                subprocess.run(["git", "clone", "https://github.com/zsh-users/zsh-syntax-highlighting.git", syntax_highlighting_dir], check=True)
+
+            logger.success("Zsh plugins installed successfully!")
         except Exception:
-            logger.error(f"Error installing Fisher: {traceback.format_exc()}")
+            logger.error(f"Error installing zsh plugins: {traceback.format_exc()}")
 
     @staticmethod
-    def _install_oh_my_posh() -> None:
-        logger.info("Installing Oh My Posh...")
+    def _install_oh_my_zsh() -> None:
+        logger.info("Installing Oh My Zsh...")
 
         try:
-            # Create bin directory if it doesn't exist
-            home = os.path.expanduser("~")
-            bin_dir = os.path.join(home, "bin")
-            os.makedirs(bin_dir, exist_ok=True)
+            # Install Oh My Zsh
+            oh_my_zsh_dir = os.path.expanduser("~/.oh-my-zsh")
+            if not os.path.exists(oh_my_zsh_dir):
+                # Download and install Oh My Zsh
+                install_script = subprocess.run(["curl", "-fsSL", "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"], capture_output=True)
+                with open("/tmp/ohmyzsh_install.sh", "wb") as f:
+                    f.write(install_script.stdout)
+                # Make the script executable and run it
+                subprocess.run(["chmod", "+x", "/tmp/ohmyzsh_install.sh"], check=True)
+                subprocess.run(["/tmp/ohmyzsh_install.sh", "", "--unattended"], check=True)
+                subprocess.run(["rm", "/tmp/ohmyzsh_install.sh"], check=False)
 
-            # Download and install Oh My Posh to user bin directory
-            install_script = subprocess.run(["curl", "-s", "https://ohmyposh.dev/install.sh"], capture_output=True)
-            with open("/tmp/ohmyposh_install.sh", "wb") as f:
-                f.write(install_script.stdout)
-            subprocess.run(["bash", "/tmp/ohmyposh_install.sh"], check=True, cwd=home)
-            subprocess.run(["rm", "/tmp/ohmyposh_install.sh"], check=False)
+                logger.success("Oh My Zsh installed successfully!")
+            else:
+                logger.info("Oh My Zsh already installed")
 
-            # Ensure oh-my-posh is executable and in PATH
-            oh_my_posh_path = os.path.join(bin_dir, "oh-my-posh")
-            if os.path.exists(oh_my_posh_path):
-                subprocess.run(["chmod", "+x", oh_my_posh_path], check=True)
+            # Install Catppuccin theme
+            try:
+                themes_dir = os.path.expanduser("~/.oh-my-zsh/themes")
+                catppuccin_dir = os.path.expanduser("~/catppuccin-zsh")
 
-            logger.success("Oh My Posh installed successfully!")
+                if not os.path.exists(catppuccin_dir):
+                    subprocess.run(["git", "clone", "https://github.com/JannoTjarks/catppuccin-zsh.git", catppuccin_dir], check=True)
+
+                # Create catppuccin flavors directory
+                catppuccin_flavors_dir = os.path.join(themes_dir, "catppuccin-flavors")
+                os.makedirs(catppuccin_flavors_dir, exist_ok=True)
+
+                # Copy theme files
+                if os.path.exists(os.path.join(catppuccin_dir, "catppuccin.zsh-theme")):
+                    subprocess.run(["cp", os.path.join(catppuccin_dir, "catppuccin.zsh-theme"), themes_dir], check=True)
+
+                if os.listdir(catppuccin_dir):
+                    for item in os.listdir(catppuccin_dir):
+                        src_path = os.path.join(catppuccin_dir, item)
+                        dst_path = os.path.join(catppuccin_flavors_dir, item)
+                        if os.path.isdir(src_path):
+                            subprocess.run(["cp", "-r", src_path, dst_path], check=False)
+
+                # Clean up
+                subprocess.run(["rm", "-rf", catppuccin_dir], check=False)
+
+                logger.success("Catppuccin theme installed successfully!")
+            except Exception:
+                logger.error(f"Error installing Catppuccin theme: {traceback.format_exc()}")
+
         except Exception:
-            logger.error(f"Error installing Oh My Posh: {traceback.format_exc()}")
+            logger.error(f"Error installing Oh My Zsh: {traceback.format_exc()}")
