@@ -177,19 +177,33 @@ class PostInstallation:
 
         # Install zsh plugins
         try:
+            # Set ZSH_CUSTOM environment variable
+            zsh_custom = os.path.expanduser("~/.oh-my-zsh/custom")
+            os.environ["ZSH_CUSTOM"] = zsh_custom
+
             # Create zsh plugin directories
-            plugins_dir = os.path.expanduser("~/.oh-my-zsh/custom/plugins")
+            plugins_dir = os.path.join(zsh_custom, "plugins")
             os.makedirs(plugins_dir, exist_ok=True)
+
+            logger.info(f"Installing zsh plugins to: {plugins_dir}")
 
             # Install zsh-autosuggestions
             autosuggestions_dir = os.path.join(plugins_dir, "zsh-autosuggestions")
             if not os.path.exists(autosuggestions_dir):
+                logger.info("Installing zsh-autosuggestions...")
                 subprocess.run(["git", "clone", "https://github.com/zsh-users/zsh-autosuggestions.git", autosuggestions_dir], check=True)
+                logger.success("zsh-autosuggestions installed")
+            else:
+                logger.info("zsh-autosuggestions already exists")
 
             # Install zsh-syntax-highlighting
             syntax_highlighting_dir = os.path.join(plugins_dir, "zsh-syntax-highlighting")
             if not os.path.exists(syntax_highlighting_dir):
+                logger.info("Installing zsh-syntax-highlighting...")
                 subprocess.run(["git", "clone", "https://github.com/zsh-users/zsh-syntax-highlighting.git", syntax_highlighting_dir], check=True)
+                logger.success("zsh-syntax-highlighting installed")
+            else:
+                logger.info("zsh-syntax-highlighting already exists")
 
             logger.success("Zsh plugins installed successfully!")
         except Exception:
