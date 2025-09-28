@@ -197,20 +197,30 @@ class PostInstallation:
             # Install Catppuccin theme for oh-my-zsh
             try:
                 themes_dir = os.path.expanduser("~/.oh-my-zsh/themes")
-                catppuccin_dir = os.path.expanduser("~/catppuccin-oh-my-zsh")
+                catppuccin_dir = os.path.expanduser("~/catppuccin-zsh")
 
                 if not os.path.exists(catppuccin_dir):
-                    subprocess.run(["git", "clone", "https://github.com/catppuccin/oh-my-zsh.git", catppuccin_dir], check=True)
+                    subprocess.run(["git", "clone", "https://github.com/JannoTjarks/catppuccin-zsh.git", catppuccin_dir], check=True)
 
-                # Copy theme files to oh-my-zsh themes directory
-                theme_files = glob.glob(os.path.join(catppuccin_dir, "themes", "*.zsh-theme"))
-                for theme_file in theme_files:
-                    theme_name = os.path.basename(theme_file)
-                    dest_file = os.path.join(themes_dir, theme_name)
-                    subprocess.run(["cp", theme_file, dest_file], check=True)
+                # Create catppuccin-flavors directory
+                flavors_dir = os.path.join(themes_dir, "catppuccin-flavors")
+                os.makedirs(flavors_dir, exist_ok=True)
 
-                # Clean up
-                subprocess.run(["rm", "-rf", catppuccin_dir], check=False)
+                # Create symbolic link for main theme file
+                theme_source = os.path.join(catppuccin_dir, "catppuccin.zsh-theme")
+                theme_dest = os.path.join(themes_dir, "catppuccin.zsh-theme")
+                if os.path.exists(theme_source) and not os.path.exists(theme_dest):
+                    subprocess.run(["ln", "-sf", theme_source, theme_dest], check=True)
+
+                # Create symbolic links for flavor files
+                flavors_source_dir = os.path.join(catppuccin_dir, "catppuccin-flavors")
+                if os.path.exists(flavors_source_dir):
+                    flavors_files = os.listdir(flavors_source_dir)
+                    for flavor_file in flavors_files:
+                        src_path = os.path.join(flavors_source_dir, flavor_file)
+                        dst_path = os.path.join(flavors_dir, flavor_file)
+                        if not os.path.exists(dst_path):
+                            subprocess.run(["ln", "-sf", src_path, dst_path], check=True)
 
                 logger.success("Catppuccin theme installed successfully!")
             except Exception:
