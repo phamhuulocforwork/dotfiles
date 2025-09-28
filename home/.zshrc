@@ -16,7 +16,12 @@ plugins=(
     github
 )
 
-source $ZSH/oh-my-zsh.sh
+# Check if oh-my-zsh is properly installed before sourcing
+if [ -f "$ZSH/oh-my-zsh.sh" ]; then
+    source $ZSH/oh-my-zsh.sh
+else
+    echo "Warning: oh-my-zsh.sh not found. Please install oh-my-zsh properly."
+fi
 
 export PATH="/mnt/c/Program Files/Microsoft VS Code/bin:$PATH"
 export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
