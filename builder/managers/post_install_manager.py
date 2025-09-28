@@ -225,25 +225,24 @@ class PostInstallation:
                 if not os.path.exists(catppuccin_dir):
                     subprocess.run(["git", "clone", "https://github.com/JannoTjarks/catppuccin-zsh.git", catppuccin_dir], check=True)
 
-                # Create catppuccin-flavors directory
-                flavors_dir = os.path.join(themes_dir, "catppuccin-flavors")
-                os.makedirs(flavors_dir, exist_ok=True)
-
-                # Create symbolic link for main theme file
+                # Copy theme files to oh-my-zsh themes directory
                 theme_source = os.path.join(catppuccin_dir, "catppuccin.zsh-theme")
                 theme_dest = os.path.join(themes_dir, "catppuccin.zsh-theme")
-                if os.path.exists(theme_source) and not os.path.exists(theme_dest):
-                    subprocess.run(["ln", "-sf", theme_source, theme_dest], check=True)
 
-                # Create symbolic links for flavor files
-                flavors_source_dir = os.path.join(catppuccin_dir, "catppuccin-flavors")
-                if os.path.exists(flavors_source_dir):
-                    flavors_files = os.listdir(flavors_source_dir)
-                    for flavor_file in flavors_files:
-                        src_path = os.path.join(flavors_source_dir, flavor_file)
-                        dst_path = os.path.join(flavors_dir, flavor_file)
-                        if not os.path.exists(dst_path):
-                            subprocess.run(["ln", "-sf", src_path, dst_path], check=True)
+                if os.path.exists(theme_source):
+                    # Read the original theme file
+                    with open(theme_source, 'r') as f:
+                        theme_content = f.read()
+
+                    # Replace the path references to use absolute path to catppuccin-zsh directory
+                    theme_content = theme_content.replace(
+                        '${0:A:h}/catppuccin-flavors/',
+                        f'{catppuccin_dir}/catppuccin-flavors/'
+                    )
+
+                    # Write modified theme to oh-my-zsh themes directory
+                    with open(theme_dest, 'w') as f:
+                        f.write(theme_content)
 
                 logger.success("Catppuccin theme installed successfully!")
             except Exception:
