@@ -32,7 +32,6 @@ class PostInstallation:
             subprocess.run(["cp", "/tmp/fastfetch-linux-amd64/usr/bin/fastfetch", user_bin_dir], check=True)
             subprocess.run(["chmod", "+x", os.path.join(user_bin_dir, "fastfetch")], check=True)
 
-            bashrc_path = os.path.expanduser("~/.bashrc")
             zshrc_path = os.path.expanduser("~/.zshrc")
             path_export = 'export PATH="$HOME/.local/bin:$PATH"'
 

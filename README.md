@@ -1,19 +1,21 @@
 # WSL Ubuntu Terminal Setup
 
-This repository contains configuration files for setting up a modern terminal environment in WSL Ubuntu with Fish shell, Oh My Posh, and Fastfetch.
+This repository contains configuration files for setting up a modern terminal environment in WSL Ubuntu with Zsh shell, Oh My Zsh, and Catppuccin theme.
 
 ![Thumbnail](./thumbnail.png)
 
 ## Features
 
-- **Fish Shell**: A user-friendly shell with auto-suggestions and syntax highlighting
-- **Oh My Posh**: A beautiful and customizable prompt
+- **Zsh Shell**: Powerful shell with Oh My Zsh framework
+- **Oh My Zsh**: Framework with plugins and themes
+- **Catppuccin Theme**: Beautiful mocha theme for Zsh
+- **Zsh Plugins**: Autosuggestions and syntax highlighting
 - **Fastfetch**: A fast system information fetcher (installed from GitHub releases)
 - **Docker**: Container platform for development
 - **nvm & Node.js**: Node Version Manager with LTS
 - **Homebrew**: Package manager for macOS/Linux
 - **uv**: Fast Python package manager
-- **Modern Tools**: Includes Neovim, Tmux, Lsd, Bat, and other useful terminal tools
+- **Modern Tools**: Includes Neovim, Lsd, Bat, and other useful terminal tools
 
 ## Quick Start
 
@@ -43,11 +45,11 @@ This repository contains configuration files for setting up a modern terminal en
 
 4. **Restart your terminal** or run:
    ```bash
-   exec $SHELL
+   source ~/.zshrc
    ```
-   *Or to use Fish shell:*
+   *Or to use Zsh shell:*
    ```bash
-   fish
+   zsh
    ```
 
 5. **Configure Git (optional):**
@@ -60,15 +62,16 @@ This repository contains configuration files for setting up a modern terminal en
 ## Installed Packages
 
 ### Core Terminal Tools
-- **Fish**: Modern shell with auto-suggestions
+- **Zsh**: Powerful shell with Oh My Zsh framework
+- **Oh My Zsh**: Framework with plugins and themes
+- **Catppuccin Theme**: Beautiful mocha theme
+- **Zsh Plugins**: Autosuggestions and syntax highlighting
 - **Fastfetch**: System information display (installed from GitHub releases)
-- **Oh My Posh**: Beautiful prompt
 
 ### Development Tools
 - **Neovim**: Modern text editor
-- **Tmux**: Terminal multiplexer
 - **Git**: Version control system
-- **Docker**: Container platform
+- **Docker**: Container platform (manual installation required)
 - **nvm & Node.js**: Node Version Manager with LTS
 - **Homebrew**: Package manager
 - **uv**: Fast Python package manager
@@ -92,34 +95,68 @@ This repository contains configuration files for setting up a modern terminal en
 
 ## Configuration Files
 
-- `~/.config/fish/config.fish`: Fish shell configuration
-- `~/.config/ohmyposh/theme.omp.json`: Oh My Posh theme
+- `~/.zshrc`: Zsh shell configuration with Oh My Zsh
+- `~/.zsh_aliases`: Custom aliases for Zsh
 - `~/.bashrc`: Bash fallback configuration
 - `~/.gitconfig`: Git configuration
 
 ## Customization
 
-### Fish Shell
-Edit `~/.config/fish/config.fish` to customize your Fish shell experience.
+### Zsh Shell
+Edit `~/.zshrc` to customize your Zsh shell experience. The configuration includes Oh My Zsh framework with Catppuccin theme.
 
-### Oh My Posh
-Edit `~/.config/ohmyposh/theme.omp.json` to customize your prompt theme. You can find more themes at [ohmyposh.dev](https://ohmyposh.dev/docs/themes).
+### Oh My Zsh Theme
+The setup installs Catppuccin mocha theme. You can change the theme by modifying `ZSH_THEME` in `~/.zshrc`:
+```bash
+ZSH_THEME="agnoster"  # Change to any Oh My Zsh theme
+```
+
+### Catppuccin Flavor
+You can change the Catppuccin flavor by modifying `CATPPUCCIN_FLAVOR` in `~/.zshrc`:
+```bash
+CATPPUCCIN_FLAVOR="latte"  # Options: frappe, latte, macchiato, mocha
+```
+
+### Zsh Plugins
+Additional plugins can be added to the `plugins` array in `~/.zshrc`:
+```bash
+plugins=(
+    git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    docker
+    # Add more plugins here
+)
+```
 
 ### Fastfetch
 Edit `~/.config/fastfetch/config.jsonc` to customize the system information display.
 
 ## Troubleshooting
 
-### Fish Shell Not Working
-If Fish shell doesn't start automatically, run:
+### Zsh Shell Not Working
+If Zsh shell doesn't start automatically, run:
 ```bash
-chsh -s /usr/bin/fish
+chsh -s /usr/bin/zsh
 ```
 
-### Oh My Posh Not Working
-Make sure Oh My Posh is installed and the configuration file exists:
+### Oh My Zsh Not Working
+Make sure Oh My Zsh is installed and the configuration file exists:
 ```bash
-oh-my-posh --version
+ls ~/.oh-my-zsh/oh-my-zsh.sh
+```
+
+### Catppuccin Theme Not Loading
+Check if the theme file exists and Zsh can find it:
+```bash
+ls ~/.oh-my-zsh/themes/catppuccin.zsh-theme
+```
+
+### Zsh Plugins Not Working
+Check if plugins are installed in the correct directory:
+```bash
+ls ~/.oh-my-zsh/plugins/zsh-autosuggestions/
+ls ~/.oh-my-zsh/plugins/zsh-syntax-highlighting/
 ```
 
 ### Fastfetch Not Working
@@ -143,11 +180,11 @@ fastfetch --version
 │   └── utils/
 │       └── schemes.py           # Data structures
 └── home/                        # Configuration files
-    ├── .bashrc
-    ├── .gitconfig
+    ├── .zshrc                   # Zsh shell configuration
+    ├── .zsh_aliases             # Zsh aliases
+    ├── .bashrc                  # Bash fallback configuration
+    ├── .gitconfig               # Git configuration
     └── .config/
-        ├── fish/                # Fish shell config
-        ├── ohmyposh/            # Oh My Posh theme
         └── fastfetch/           # Fastfetch config
 ```
 
