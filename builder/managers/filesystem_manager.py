@@ -52,13 +52,23 @@ class FileSystemManager:
             shutil.copytree(src=Path("./home/bin"), dst=home / "bin", dirs_exist_ok=True)
 
         if os.path.exists("./home/.zshrc"):
-            shutil.copy(src=Path("./home/.zshrc"), dst=home / ".zshrc")
+            zshrc_dst = home / ".zshrc"
+            # Remove existing file if it exists to ensure overwrite
+            if zshrc_dst.exists():
+                zshrc_dst.unlink()
+            shutil.copy(src=Path("./home/.zshrc"), dst=zshrc_dst)
 
         if os.path.exists("./home/.zsh_aliases"):
-            shutil.copy(src=Path("./home/.zsh_aliases"), dst=home / ".zsh_aliases")
+            zsh_aliases_dst = home / ".zsh_aliases"
+            if zsh_aliases_dst.exists():
+                zsh_aliases_dst.unlink()
+            shutil.copy(src=Path("./home/.zsh_aliases"), dst=zsh_aliases_dst)
 
         if os.path.exists("./home/.gitconfig"):
-            shutil.copy(src=Path("./home/.gitconfig"), dst=home / ".gitconfig")
+            gitconfig_dst = home / ".gitconfig"
+            if gitconfig_dst.exists():
+                gitconfig_dst.unlink()
+            shutil.copy(src=Path("./home/.gitconfig"), dst=gitconfig_dst)
 
         logger.success("Dotfiles copied successfully!")
 

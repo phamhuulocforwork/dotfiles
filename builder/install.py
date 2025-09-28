@@ -19,11 +19,11 @@ class Builder:
         # Install packages
         self.packages_installation()
 
+        # Post installation setup (before copying dotfiles)
+        PostInstallation.apply()
+
         # Copy dotfiles
         FileSystemManager.copy_dotfiles()
-
-        # Post installation setup
-        PostInstallation.apply()
 
         logger.success("WSL Ubuntu terminal setup is complete!")
 
