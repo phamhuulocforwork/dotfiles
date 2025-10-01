@@ -11,10 +11,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 
 alias grep='grep --color=auto'
-alias cat='bat'
 alias vim='nvim'
 alias vi='nvim'
-alias nano='nvim'
 
 # File Operations
 alias ll="ls -la"
