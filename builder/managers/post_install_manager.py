@@ -33,6 +33,7 @@ class PostInstallation:
             subprocess.run(["chmod", "+x", os.path.join(user_bin_dir, "fastfetch")], check=True)
 
             zshrc_path = os.path.expanduser("~/.zshrc")
+            bashrc_path = os.path.expanduser("~/.bashrc")
             path_export = 'export PATH="$HOME/.local/bin:$PATH"'
 
             for rc_file in [bashrc_path, zshrc_path]:
