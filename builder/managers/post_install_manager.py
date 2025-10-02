@@ -16,6 +16,7 @@ class PostInstallation:
         PostInstallation._install_homebrew()
         PostInstallation._install_uv()
         PostInstallation._install_oh_my_zsh()
+        PostInstallation._install_zsh_plugins()
         logger.info("The post-installation configuration is complete!")
 
     @staticmethod
@@ -57,8 +58,10 @@ class PostInstallation:
         try:
             try:
                 subprocess.run(["docker", "--version"], capture_output=True, check=True)
+                logger.info("Docker is already installed")
                 return
-            except subprocess.CalledProcessError:
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                # Docker is not installed or not working properly
                 pass
 
             # Docker requires sudo and complex setup - skip in automated setup
@@ -131,18 +134,33 @@ class PostInstallation:
         except Exception:
             logger.error(f"Error changing shell to zsh: {traceback.format_exc()}")
 
+    @staticmethod
+    def _install_zsh_plugins() -> None:
         try:
+            logger.info("Installing Zsh plugins...")
             zsh_dir = os.path.expanduser("~/.oh-my-zsh")
             plugins_dir = os.path.join(zsh_dir, "plugins")
-            os.makedirs(plugins_dir, exist_ok=True)
+            
+            if not os.path.exists(plugins_dir):
+                logger.error("Oh My Zsh plugins directory not found. Make sure Oh My Zsh is installed first.")
+                return
 
             autosuggestions_dir = os.path.join(plugins_dir, "zsh-autosuggestions")
             if not os.path.exists(autosuggestions_dir):
+                logger.info("Installing zsh-autosuggestions plugin...")
                 subprocess.run(["git", "clone", "https://github.com/zsh-users/zsh-autosuggestions.git", autosuggestions_dir], check=True)
+                logger.success("zsh-autosuggestions plugin installed successfully!")
+            else:
+                logger.info("zsh-autosuggestions plugin already installed")
 
             syntax_highlighting_dir = os.path.join(plugins_dir, "zsh-syntax-highlighting")
             if not os.path.exists(syntax_highlighting_dir):
+                logger.info("Installing zsh-syntax-highlighting plugin...")
                 subprocess.run(["git", "clone", "https://github.com/zsh-users/zsh-syntax-highlighting.git", syntax_highlighting_dir], check=True)
+                logger.success("zsh-syntax-highlighting plugin installed successfully!")
+            else:
+                logger.info("zsh-syntax-highlighting plugin already installed")
+                
         except Exception:
             logger.error(f"Error installing zsh plugins: {traceback.format_exc()}")
 
