@@ -20,3 +20,7 @@
   helper = "/mnt/c/Program\\ Files/Git/mingw64/bin/git-credential-manager.exe"
 [credential "https://dev.azure.com"]
   useHttpPath = true
+[credential "https://github.com"]
+  helper = "/mnt/c/Program\\ Files/Git/mingw64/bin/git-credential-manager.exe"
+[url "https://github.com/"]
+  insteadOf = git@github.com:
