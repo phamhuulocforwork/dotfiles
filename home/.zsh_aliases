@@ -44,6 +44,7 @@ alias nrd="npm run dev"
 alias nrs="npm run start"
 alias nrt="npm run test"
 alias nrb="npm run build"
+alias nrl="npm run lint"
 
 # Yarn Shortcuts
 alias ys="yarn start"
@@ -51,6 +52,7 @@ alias yi="yarn install"
 alias yt="yarn test"
 alias yb="yarn build"
 alias yd="yarn dev"
+alias yrl="yarn lint"
 
 # System Utils
 alias reload="source ~/.zshrc"
@@ -68,5 +70,7 @@ alias di="docker images"
 # VS Code Shortcuts
 alias code="code ."
 alias cursor="cursor ."
+alias anti="antigravity ."
 alias codeh="code ~"
 alias cursorh="cursor ~"
+alias antih="antigravity ~"

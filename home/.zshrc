@@ -27,6 +27,7 @@ export PATH="/mnt/c/Program Files/Microsoft VS Code/bin:$PATH"
 export PATH="/mnt/c/Users/PC/AppData/Roaming/npm:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
+
 if [[ "$PWD" == "$HOME" ]]; then
     cd ~/Github
 fi
@@ -135,3 +136,25 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Auto load nvm version from .nvmrc
+autoload -U add-zsh-hook
+
+function load-nvmrc() {
+  local node_version
+  node_version="$(nvm version)"
+
+  if [ -f .nvmrc ]; then
+    local nvmrc_node_version
+    nvmrc_node_version="$(nvm version "$(cat .nvmrc)")"
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use
+    fi
+  fi
+}
+
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
