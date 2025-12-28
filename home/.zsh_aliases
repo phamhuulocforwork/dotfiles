@@ -46,6 +46,14 @@ alias nrt="npm run test"
 alias nrb="npm run build"
 alias nrl="npm run lint"
 
+# Laravel Shortcuts
+alias laravel="cd ~/Laravel"
+alias pas="php artisan serve"
+alias pamake="php artisan make:"
+alias pamigrate="php artisan migrate"
+alias pamrollback="php artisan migrate:rollback"
+alias paseed="php artisan db:seed"
+
 # Yarn Shortcuts
 alias ys="yarn start"
 alias yi="yarn install"
